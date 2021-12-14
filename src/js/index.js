@@ -5,4 +5,4 @@
  * @version 1.0.0
  */
 
-import './components/mac-dock/index.js'
+import './components/desktop-component/index.js'

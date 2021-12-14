@@ -33,12 +33,12 @@ template.innerHTML = `
         }
     </style>
     <div class="navbar">
-        <div class="test"></div>
-        <div class="test"></div>
-        <div class="test"></div>
-        <div class="test"></div>
-        <div class="test"></div>
-        <div class="test"></div>
+        <div class="test one"></div>
+        <div class="test two"></div>
+        <div class="test three"></div>
+        <div class="test four"></div>
+        <div class="test five"></div>
+        <div class="test six"></div>
     </div>
 `
 
@@ -50,5 +50,6 @@ class extends HTMLElement {
         super()
         this.attachShadow({ mode: 'open' })
             .appendChild(template.content.cloneNode(true))
+
     }
 })
