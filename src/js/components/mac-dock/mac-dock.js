@@ -2,12 +2,16 @@ const template = document.createElement('template')
 
 template.innerHTML = `
     <style>
-        .navbar {
+        :host {
+            display: block;
             position: absolute;
+            grid-column: 2/4;
+            justify-self: center;
+            bottom: 10px;
+        }
+        .navbar {
             display: flex;
             height: 60px;
-            justify-self: center;
-            bottom: 15px;
             border-radius: 15px;
             background: rgba(83, 83, 83, 0.25);
             backdrop-filter: blur(11px);
