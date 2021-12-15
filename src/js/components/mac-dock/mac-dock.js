@@ -23,22 +23,14 @@ template.innerHTML = `
             padding: 4px;
         }
         
-        .test {
-            width: 50px;
-            height: 50px;
-            background-color: white;
-            margin-left: 8px;
-            margin-right: 8px;
-            border-radius: 10px;
-        }
     </style>
     <div class="navbar">
-        <div class="test one"></div>
-        <div class="test two"></div>
-        <div class="test three"></div>
-        <div class="test four"></div>
-        <div class="test five"></div>
-        <div class="test six"></div>
+        <slot name="memory" class="test one"></slot>
+        <slot name="chat" class="test two"></slot>
+        <slot name="terminal" class="test three"></slot>
+        <slot name="testone" class="test four"></slot>
+        <slot name="testtwo" class="test five"></slot>
+        <slot name="testthree" class="test six"></slot>
     </div>
 `
 

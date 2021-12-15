@@ -1,10 +1,15 @@
 import '../mac-dock/index.js'
+import '../app-icon/index.js'
 
 const template = document.createElement('template')
 
 template.innerHTML = `
     <style>
-    :host {
+      :host {
+          width: 100%;
+          height: 100%;
+      }  
+      .desktop {
         width: 100%;
         height: 100%;
         background: linear-gradient(180deg, rgb(0, 39, 3) 25%, rgb(16, 71, 45) 75%, rgb(15, 110, 66) 100%);
@@ -64,13 +69,31 @@ template.innerHTML = `
           top: 110%;
         }
       }
+
+      .test {
+        width: 50px;
+        height: 50px;
+        margin-left: 8px;
+        margin-right: 8px;
+        border-radius: 10px;
+        border: solid 1px white;
+    }
     </style>
-    <div class="animation">
-        <div class="line" id="lineone"></div>
-        <div class="line" id="linetwo"></div>
-        <div class="line" id="linethree"></div>
+    <div class="desktop">
+        <div class="animation">
+            <div class="line" id="lineone"></div>
+            <div class="line" id="linetwo"></div>
+            <div class="line" id="linethree"></div>
+        </div>
+        <mac-dock>
+            <div slot="memory" class="test"></div>
+            <app-icon slot="chat" src="./js/components/desktop-component/img/chat_blank.png"></app-icon>
+            <app-icon slot="terminal" src="./js/components/desktop-component/img/terminal.png"></app-icon>
+            <div slot="testone" class="test"></div>
+            <div slot="testtwo" class="test"></div>
+            <div slot="testthree" class="test"></div>
+        </mac-dock>
     </div>
-    <mac-dock></mac-dock>
 `
 
 customElements.define('desktop-component',
