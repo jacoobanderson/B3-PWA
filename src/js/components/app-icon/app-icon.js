@@ -6,6 +6,7 @@ template.innerHTML = `
         :host {
             margin: 0;
             display: flex;
+            
         }
         .test {
             width: 50px;
@@ -42,5 +43,18 @@ customElements.define('app-icon',
                 this.#image.setAttribute('src', newValue)
             }
         }
+
+        connectedCallback () {
+            this.#image.addEventListener('mousedown', (event) => this.#onMouseDown(event))
+            this.#image.addEventListener('mouseup', (event) => this.#onMouseUp(event))
+        }
+
+        #onMouseDown () {
+            this.#image.style.opacity = '0.8'
+        }
+        #onMouseUp () {
+            this.#image.style.opacity = '1'
+        }
+
 
     })

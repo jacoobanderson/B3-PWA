@@ -8,14 +8,13 @@ template.innerHTML = `
             grid-column: 2/4;
             justify-self: center;
             bottom: 10px;
+            backdrop-filter: blur(100px)
         }
         .navbar {
             display: flex;
             height: 60px;
             border-radius: 15px;
-            background: rgba(83, 83, 83, 0.25);
-            backdrop-filter: blur(11px);
-            opacity: 0.9;
+            background: rgba(83, 83, 83, 0.3);
             z-index: -3;
             justify-content: center;
             align-items: center;

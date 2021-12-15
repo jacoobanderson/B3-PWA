@@ -1,5 +1,6 @@
 import '../mac-dock/index.js'
 import '../app-icon/index.js'
+import '../draggable-window/index.js'
 
 const template = document.createElement('template')
 
@@ -86,9 +87,9 @@ template.innerHTML = `
             <div class="line" id="linethree"></div>
         </div>
         <mac-dock>
-            <div slot="memory" class="test"></div>
-            <app-icon slot="chat" src="./js/components/desktop-component/img/chat_blank.png"></app-icon>
-            <app-icon slot="terminal" src="./js/components/desktop-component/img/terminal.png"></app-icon>
+            <app-icon slot="memory" class="memory" src="./js/components/desktop-component/img/app_drawer.png"></app-icon>
+            <app-icon slot="chat" class="chat" src="./js/components/desktop-component/img/chat_blank.png"></app-icon>
+            <app-icon slot="terminal" class="terminal" src="./js/components/desktop-component/img/terminal.png"></app-icon>
             <div slot="testone" class="test"></div>
             <div slot="testtwo" class="test"></div>
             <div slot="testthree" class="test"></div>
@@ -100,9 +101,25 @@ customElements.define('desktop-component',
 
     class extends HTMLElement {
 
+      #desktop
+
+      #memory
+
         constructor() {
             super()
             this.attachShadow({ mode: 'open' })
                 .appendChild(template.content.cloneNode(true))
+
+            this.#memory = this.shadowRoot.querySelector('.memory')
+            this.#desktop = this.shadowRoot.querySelector('.desktop')
+        }
+
+        connectedCallback() {
+          this.#memory.addEventListener('click', (event) => this.#memoryOnClick(event))
+        }
+
+        #memoryOnClick() {
+          const window = document.createElement('draggable-window')
+          this.#desktop.appendChild(window)
         }
     })
