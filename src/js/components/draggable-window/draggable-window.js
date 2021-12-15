@@ -17,13 +17,11 @@ template.innerHTML = `
 
         @keyframes pop {
             from {
-              max-height: 0px;
               transform: scale(0);
               opacity: 0;
             }
           
             to {
-              max-height: 1000px;
               transform: scale(1);
               opacity: 1;
             }
@@ -73,6 +71,8 @@ customElements.define('draggable-window',
 
         #appcontainer
 
+        #headmenu
+
         constructor() {
             super()
             this.attachShadow({ mode: 'open' })
@@ -80,10 +80,12 @@ customElements.define('draggable-window',
 
             this.#exit = this.shadowRoot.querySelector('.exit')
             this.#appcontainer = this.shadowRoot.querySelector('.appcontainer')
+            this.#headmenu = this.shadowRoot.querySelector('.menu')
         }
 
         connectedCallback() {
             this.#exit.addEventListener('click', (event) => this.#exitApp(event))
+            this.#headmenu.addEventListener('mousedown', (event) => this.#onMouseDown(event))
         }
 
         #exitApp () {
@@ -98,6 +100,33 @@ customElements.define('draggable-window',
             if (name === 'app' && newValue === 'terminal') {
                 const terminal = document.createElement('terminal-app')
                 this.#appcontainer.appendChild(terminal)
+            }
+        }
+
+        #onMouseDown(event) {
+            const element = this
+
+            window.addEventListener('mousemove', onMouseMove)
+            window.addEventListener('mouseup', onMouseUp)
+
+            let previousX = event.clientX
+            let previousY = event.clientY
+
+            function onMouseMove (event) {
+                const newPosX = previousX - event.clientX
+                const newPosY = previousY - event.clientY
+
+                const domRect = element.getBoundingClientRect()
+                element.style.left = domRect.left - newPosX + 'px'
+                element.style.top = domRect.top - newPosY + 'px'
+
+                previousX = event.clientX
+                previousY = event.clientY
+            }
+
+            function onMouseUp () {
+                window.removeEventListener('mousemove', onMouseMove)
+                window.removeEventListener('mouseup', onMouseUp)
             }
         }
     })

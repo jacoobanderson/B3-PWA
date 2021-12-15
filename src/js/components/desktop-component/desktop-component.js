@@ -9,11 +9,16 @@ template.innerHTML = `
       :host {
           width: 100%;
           height: 100%;
+          max-width: 100%;
+          max-height: 100%;
+          min-width: 100%;
+          min-height: 100%;
       }  
       .desktop {
         width: 100%;
         height: 100%;
-        background: linear-gradient(180deg, rgb(0, 39, 3) 25%, rgb(16, 71, 45) 75%, rgb(15, 110, 66) 100%);
+        background-color: #923cb5;
+        background-image: linear-gradient(175deg, #923cb5 0%, #000000 78%);
         overflow: hidden;
         display: grid;
         grid-template-columns: 1fr 1fr 1fr 1fr;
