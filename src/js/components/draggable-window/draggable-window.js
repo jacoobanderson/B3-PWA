@@ -1,3 +1,4 @@
+import '../terminal-app/index.js'
 
 const template = document.createElement('template')
 
@@ -7,18 +8,16 @@ template.innerHTML = `
             position: absolute;
             z-index: 20;
             margin: 0;
-            width: 400px;
-            height: 300px;
-            border: solid 1px white;
+            border: solid 1px grey;
             border-radius: 7px;
         }
 
         .button {
-            width: 15px;
-            height: 15px;
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
             border: none;
-            margin: 2px;
+            margin: 6px 3px 6px 3px;
         }
 
         .button:hover {
@@ -26,7 +25,7 @@ template.innerHTML = `
         }
 
         .menu {
-            background-color: grey;
+            background-color: rgb(72, 72, 74);
             align-items: center;
         }
 
@@ -37,7 +36,7 @@ template.innerHTML = `
             background-color: yellow;
         }
         .green {
-            background-color: green;
+            background-color: rgb(52, 199, 89);
         }
 
     </style>
@@ -46,9 +45,7 @@ template.innerHTML = `
         <button class="button yellow"></button>
         <button class="button green"></button>
     </div>
-    <div class="appcontainer">
-        <slot name="app"></slot>
-    </div>
+    <div class="appcontainer"></div>
 `
 
 customElements.define('draggable-window',
@@ -57,12 +54,15 @@ customElements.define('draggable-window',
 
         #exit
 
+        #appcontainer
+
         constructor() {
             super()
             this.attachShadow({ mode: 'open' })
                 .appendChild(template.content.cloneNode(true))
 
             this.#exit = this.shadowRoot.querySelector('.exit')
+            this.#appcontainer = this.shadowRoot.querySelector('.appcontainer')
         }
 
         connectedCallback() {
@@ -71,5 +71,16 @@ customElements.define('draggable-window',
 
         #exitApp () {
             this.style.display = 'none'
+        }
+
+        static get observedAttributes() {
+            return ['app']
+        }
+
+        attributeChangedCallback (name, oldValue, newValue) {
+            if (name === 'app' && newValue === 'terminal') {
+                const terminal = document.createElement('terminal-app')
+                this.#appcontainer.appendChild(terminal)
+            }
         }
     })

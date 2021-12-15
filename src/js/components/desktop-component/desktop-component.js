@@ -105,6 +105,8 @@ customElements.define('desktop-component',
 
       #memory
 
+      #terminal
+
         constructor() {
             super()
             this.attachShadow({ mode: 'open' })
@@ -112,14 +114,16 @@ customElements.define('desktop-component',
 
             this.#memory = this.shadowRoot.querySelector('.memory')
             this.#desktop = this.shadowRoot.querySelector('.desktop')
+            this.#terminal = this.shadowRoot.querySelector('.terminal')
         }
 
         connectedCallback() {
-          this.#memory.addEventListener('click', (event) => this.#memoryOnClick(event))
+          this.#terminal.addEventListener('click', (event) => this.#terminalOnClick(event))
         }
 
-        #memoryOnClick() {
+        #terminalOnClick() {
           const window = document.createElement('draggable-window')
+          window.setAttribute('app', 'terminal')
           this.#desktop.appendChild(window)
         }
     })
