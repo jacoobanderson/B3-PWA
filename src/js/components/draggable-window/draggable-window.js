@@ -10,7 +10,24 @@ template.innerHTML = `
             margin: 0;
             border: solid 1px grey;
             border-radius: 7px;
+            overflow: hidden;
+            animation-duration:0.5s;
+            animation-name: pop;
         }
+
+        @keyframes pop {
+            from {
+              max-height: 0px;
+              transform: scale(0);
+              opacity: 0;
+            }
+          
+            to {
+              max-height: 1000px;
+              transform: scale(1);
+              opacity: 1;
+            }
+          }
 
         .button {
             width: 12px;
