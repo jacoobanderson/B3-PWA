@@ -112,6 +112,8 @@ customElements.define('desktop-component',
 
       #terminal
 
+      #amountOfClicks
+
         constructor() {
             super()
             this.attachShadow({ mode: 'open' })
@@ -120,6 +122,7 @@ customElements.define('desktop-component',
             this.#memory = this.shadowRoot.querySelector('.memory')
             this.#desktop = this.shadowRoot.querySelector('.desktop')
             this.#terminal = this.shadowRoot.querySelector('.terminal')
+            this.#amountOfClicks = 0
         }
 
         connectedCallback() {
@@ -127,8 +130,17 @@ customElements.define('desktop-component',
         }
 
         #terminalOnClick() {
+          // Each time the app is clicked the position changes, prevents windows from stacking.
+          this.#amountOfClicks += 20
           const window = document.createElement('draggable-window')
+
+          // Specifies which app should open.
           window.setAttribute('app', 'terminal')
+
+          // The exact values of the apps position change.
+          window.style.top = `${this.#amountOfClicks + 10}px`
+          window.style.left = `${this.#amountOfClicks + 10}px`
+
           this.#desktop.appendChild(window)
         }
     })
