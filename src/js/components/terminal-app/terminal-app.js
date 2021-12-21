@@ -18,7 +18,7 @@ template.innerHTML = `
             color: white;
         }
     </style>
-    <div class="test"><h1>TERMINAL</h1></div>
+    <div class="test"></div>
 `
 
 customElements.define('terminal-app',

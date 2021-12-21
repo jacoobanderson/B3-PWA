@@ -6,7 +6,6 @@ template.innerHTML = `
         :host {
             margin: 0;
             display: flex;
-            
         }
         .test {
             width: 50px;

@@ -6,7 +6,7 @@ template.innerHTML = `
     <style>
         :host {
             position: absolute;
-            z-index: 20;
+            z-index: 10;
             margin: 0;
             border: solid 1px grey;
             border-radius: 7px;
@@ -89,7 +89,9 @@ customElements.define('draggable-window',
         }
 
         #exitApp () {
-            this.style.display = 'none'
+            // removes the app from the DOM
+            this.remove()
+            // this.style.display = 'none'
         }
 
         static get observedAttributes() {
@@ -97,6 +99,7 @@ customElements.define('draggable-window',
         }
 
         attributeChangedCallback (name, oldValue, newValue) {
+            // Creates the window and the app depending on which value of the attribute.
             if (name === 'app' && newValue === 'terminal') {
                 const terminal = document.createElement('terminal-app')
                 this.#appcontainer.appendChild(terminal)
@@ -106,6 +109,7 @@ customElements.define('draggable-window',
         #onMouseDown(event) {
             const element = this
 
+            // Temporary solution, better alternative?
             window.addEventListener('mousemove', onMouseMove)
             window.addEventListener('mouseup', onMouseUp)
 
