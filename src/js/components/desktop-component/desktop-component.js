@@ -7,13 +7,14 @@ const template = document.createElement('template')
 template.innerHTML = `
     <style>
       :host {
-          width: 100%;
-          height: 100%;
-          max-width: 100%;
-          max-height: 100%;
-          min-width: 100%;
-          min-height: 100%;
+        width: 100%;
+        height: 100%;
+        max-width: 100%;
+        max-height: 100%;
+        min-width: 100%;
+        min-height: 100%;
       }  
+      
       .desktop {
         width: 100%;
         height: 100%;
@@ -69,10 +70,10 @@ template.innerHTML = `
           
       @keyframes drop {
         0% {
-          top: -50%;
+          top: -45%;
           }
         100% {
-          top: 110%;
+          top: 115%;
         }
       }
 
@@ -122,6 +123,7 @@ customElements.define('desktop-component',
             this.#memory = this.shadowRoot.querySelector('.memory')
             this.#desktop = this.shadowRoot.querySelector('.desktop')
             this.#terminal = this.shadowRoot.querySelector('.terminal')
+            // change name
             this.#amountOfClicks = 0
         }
 
@@ -129,6 +131,8 @@ customElements.define('desktop-component',
           this.#terminal.addEventListener('click', (event) => this.#terminalOnClick(event))
         }
 
+
+        // FIX - INSTEAD MAKE FUNCTION THAT CAN BE USED FOR ALL APPS AND TAKES APP AS ARGUMENT
         #terminalOnClick() {
           // Each time the app is clicked the position changes, prevents windows from stacking.
           // Checks how many windows currently.

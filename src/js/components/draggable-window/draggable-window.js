@@ -5,6 +5,7 @@ const template = document.createElement('template')
 template.innerHTML = `
     <style>
         :host {
+            outline: 0;
             position: absolute;
             z-index: 10;
             margin: 0;
@@ -86,6 +87,9 @@ customElements.define('draggable-window',
         connectedCallback() {
             this.#exit.addEventListener('click', (event) => this.#exitApp(event))
             this.#headmenu.addEventListener('mousedown', (event) => this.#onMouseDown(event))
+            this.addEventListener('click', (event) => this.#focusElement(event))
+            this.addEventListener('focus', (event) => this.#zIndexSet(event))
+            this.addEventListener('focusout', (event) => this.#zIndexRemove(event))
         }
 
         #exitApp () {
@@ -108,6 +112,8 @@ customElements.define('draggable-window',
 
         #onMouseDown(event) {
             const element = this
+
+            this.#focusElement()
 
             // Temporary solution, better alternative?
             window.addEventListener('mousemove', onMouseMove)
@@ -132,5 +138,21 @@ customElements.define('draggable-window',
                 window.removeEventListener('mousemove', onMouseMove)
                 window.removeEventListener('mouseup', onMouseUp)
             }
+        }
+
+        // When the element is focused, set zIndex to 20.
+        #zIndexSet() {
+                this.style.zIndex = 20
+        }
+
+        // When the element is unfocused set zIndex back to 10.
+        #zIndexRemove() {
+                this.style.zIndex = 10
+        }
+
+        // Sets the attribute tabindex to 0 which allows the element to be focused.
+        #focusElement() {
+            this.setAttribute('tabindex', '0')
+            this.focus()
         }
     })
