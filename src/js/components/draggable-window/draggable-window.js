@@ -12,7 +12,7 @@ template.innerHTML = `
             border: solid 1px grey;
             border-radius: 7px;
             overflow: hidden;
-            animation-duration:0.5s;
+            animation-duration: 0.5s;
             animation-name: pop;
         }
 
@@ -107,6 +107,12 @@ customElements.define('draggable-window',
             if (name === 'app' && newValue === 'terminal') {
                 const terminal = document.createElement('terminal-app')
                 this.#appcontainer.appendChild(terminal)
+            } else if (name === 'app' && newValue === 'memory') {
+                const memoryGame = document.createElement('memory-game')
+                this.#appcontainer.appendChild(memoryGame)
+            } else if (name === 'app' && newValue === 'chat') {
+                const chatApp = document.createElement('chat-app')
+                this.#appcontainer.appendChild(chatApp)
             }
         }
 

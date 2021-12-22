@@ -113,6 +113,8 @@ customElements.define('desktop-component',
 
       #terminal
 
+      #chat
+
       #amountOfClicks
 
         constructor() {
@@ -123,17 +125,20 @@ customElements.define('desktop-component',
             this.#memory = this.shadowRoot.querySelector('.memory')
             this.#desktop = this.shadowRoot.querySelector('.desktop')
             this.#terminal = this.shadowRoot.querySelector('.terminal')
+            this.#chat = this.shadowRoot.querySelector('.chat')
             // change name
             this.#amountOfClicks = 0
         }
 
         connectedCallback() {
-          this.#terminal.addEventListener('click', (event) => this.#terminalOnClick(event))
+          this.#terminal.addEventListener('click', () => this.#appOnClick('terminal'))
+          this.#memory.addEventListener('click', () => this.#appOnClick('memory'))
+          this.#chat.addEventListener('click', () => this.#appOnClick('chat'))
         }
 
 
         // FIX - INSTEAD MAKE FUNCTION THAT CAN BE USED FOR ALL APPS AND TAKES APP AS ARGUMENT
-        #terminalOnClick() {
+        #appOnClick(application) {
           // Each time the app is clicked the position changes, prevents windows from stacking.
           // Checks how many windows currently.
           const amountOfWindows = this.#desktop.querySelectorAll('draggable-window').length
@@ -145,7 +150,7 @@ customElements.define('desktop-component',
           const window = document.createElement('draggable-window')
 
           // Specifies which app should open.
-          window.setAttribute('app', 'terminal')
+          window.setAttribute('app', `${application}`)
 
           // The exact values of the apps position change.
           window.style.top = `${this.#amountOfClicks + 10}px`
