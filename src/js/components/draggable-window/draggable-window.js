@@ -1,4 +1,6 @@
 import '../terminal-app/index.js'
+import '../chat-app/index.js'
+import '../memory-game/index.js'
 
 const template = document.createElement('template')
 
