@@ -96,7 +96,11 @@ customElements.define('draggable-window',
 
         #exitApp () {
             // removes the app from the DOM
-            this.remove()
+            this.dispatchEvent(new CustomEvent('draggable-window:closed', {
+                bubbles: true
+            }))
+
+            // this.remove()
             // this.style.display = 'none'
         }
 

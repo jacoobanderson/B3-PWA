@@ -134,6 +134,11 @@ customElements.define('desktop-component',
           this.#terminal.addEventListener('click', () => this.#appOnClick('terminal'))
           this.#memory.addEventListener('click', () => this.#appOnClick('memory'))
           this.#chat.addEventListener('click', () => this.#appOnClick('chat'))
+
+          // Put in seperate method.
+          this.#desktop.addEventListener('draggable-window:closed', (event) => {
+            this.#desktop.removeChild(event.target)
+          })
         }
 
 
