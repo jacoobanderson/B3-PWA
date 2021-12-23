@@ -90,8 +90,8 @@ customElements.define('draggable-window',
             this.#exit.addEventListener('click', (event) => this.#exitApp(event))
             this.#headmenu.addEventListener('mousedown', (event) => this.#onMouseDown(event))
             this.addEventListener('click', (event) => this.#focusElement(event))
-            this.addEventListener('focus', (event) => this.#zIndexSet(event))
-            this.addEventListener('focusout', (event) => this.#zIndexRemove(event))
+            this.addEventListener('click', (event) => this.#thisOnClick(event))
+            this.addEventListener('mousedown', (event) => this.#thisOnClick(event))
         }
 
         #exitApp () {
@@ -102,6 +102,14 @@ customElements.define('draggable-window',
 
             // this.remove()
             // this.style.display = 'none'
+        }
+
+        // Fires when this component is clicked or mousedown, allows the desktop component to register
+        // when this happens and allows the change of zIndex based on that information (Each element keeps it's zIndex).
+        #thisOnClick () {
+            this.dispatchEvent(new CustomEvent('windowClickCount', {
+                bubbles: true
+            }))
         }
 
         static get observedAttributes() {
@@ -150,16 +158,6 @@ customElements.define('draggable-window',
                 window.removeEventListener('mousemove', onMouseMove)
                 window.removeEventListener('mouseup', onMouseUp)
             }
-        }
-
-        // When the element is focused, set zIndex to 20.
-        #zIndexSet() {
-                this.style.zIndex = 20
-        }
-
-        // When the element is unfocused set zIndex back to 10.
-        #zIndexRemove() {
-                this.style.zIndex = 10
         }
 
         // Sets the attribute tabindex to 0 which allows the element to be focused.

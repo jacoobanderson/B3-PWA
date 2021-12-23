@@ -117,6 +117,8 @@ customElements.define('desktop-component',
 
       #amountOfClicks
 
+      #zIndexClicks
+
         constructor() {
             super()
             this.attachShadow({ mode: 'open' })
@@ -128,6 +130,7 @@ customElements.define('desktop-component',
             this.#chat = this.shadowRoot.querySelector('.chat')
             // change name
             this.#amountOfClicks = 0
+            this.#zIndexClicks = 10
         }
 
         connectedCallback() {
@@ -138,6 +141,12 @@ customElements.define('desktop-component',
           // Put in seperate method.
           this.#desktop.addEventListener('draggable-window:closed', (event) => {
             this.#desktop.removeChild(event.target)
+          })
+
+          // Put in seperate method.
+          this.#desktop.addEventListener('windowClickCount', (event) => {
+            this.#zIndexClicks++
+            event.target.style.zIndex = `${this.#zIndexClicks}`
           })
         }
 
