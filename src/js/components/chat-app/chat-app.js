@@ -14,44 +14,81 @@ template.innerHTML = `
         .chatapp {
             height: 100%;
             width: 100%;
-            display: grid;
-            grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
-            display: none;
+            display: flex;
+            flex-direction: column;
         }
 
         .chatmessages {
             background-color: white;
-            width: 95%;
-            height: 95%;
+            width: 603px;
+            height: 350px;
             color: white;
-            grid-row: 1/5;
             justify-self: center;
             align-self: center;
             background-color: rgb(58, 58, 58);
             border-radius: 8px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            overflow-y: scroll;
         }
 
         .sender {
             display: block;
-            width: 95%;
-            height: 90%;
+            width: 90%;
+            height: 50px;;
             resize: none;
-            grid-row: 5/6;
             justify-self: center;
             align-self: center;
-            padding: 4px;
+            padding: 8px;
             margin: 0;
             margin-bottom: 6px;
             outline: none;
             border-radius: 8px;
+            background-color: rgb(58, 58, 58);
+            border: 1px solid black;
+            color: white;
         }
+
+        .submitmessage {
+            display: block;
+            justify-self: center;
+            align-self: center;
+            width: 603px;
+            background-color: rgb(58, 58, 58);
+            border: none;
+            border-radius: 8px;
+            height: 30px;
+            color: white;
+        }
+
+        .submitmessage:hover {
+            background-color: rgb(78, 78, 78);
+        }
+
+        .hidenickname {
+            display: none;
+        }
+
+        p {
+            border-radius: 5px;
+            margin: 20px;
+            width: 90%;
+            padding: 10px;
+            background-color: rgb(52, 130, 50);
+        }
+
     </style>
     <div class="chatapp">
-        <div class="chatmessages"></div>
+        <div class="chatmessages">
+            <p>Nogjake:<br>Hej jag bara testar hur detta fungerar just nu och ska styleadetta vi får se hur det går o det men blir nog bra.</p>
+            <p>Nogjake:<br>Hej jag bara testar hur detta fungerar just nu och ska styleadetta vi får se hur det går o det men blir nog bra.</p>
+            <p>Nogjake:<br>Hej jag bara testar hur detta fungerar just nu och ska styleadetta vi får se hur det går o det men blir nog bra.</p>
+            <p>Nogjake:<br>Hej jag bara testar hur detta fungerar just nu och ska styleadetta vi får se hur det går o det men blir nog bra.</p>
+        </div>
         <textarea class="sender"></textarea>
-        <input type="submit" class="submitmessage">
+        <button class="submitmessage">Send</button>
     </div>
-    <chat-nickname></chat-nickname>
+    <chat-nickname class="hidenickname"></chat-nickname>
 `
 
 customElements.define('chat-app',

@@ -45,7 +45,7 @@ template.innerHTML = `
         }
 
         .button:hover {
-            background-color: rgb(68, 68, 68);
+            background-color: rgb(78, 78, 78);
         }
     </style>
     <div class="nicknameinput">
