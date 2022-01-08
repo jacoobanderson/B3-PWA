@@ -163,6 +163,6 @@ customElements.define('draggable-window',
         // Sets the attribute tabindex to 0 which allows the element to be focused.
         #focusElement() {
             this.setAttribute('tabindex', '0')
-            this.focus()
+            //this.focus()
         }
     })

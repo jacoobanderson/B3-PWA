@@ -8,17 +8,31 @@ template.innerHTML = `
             width: 650px;
             background-color: rgb(44, 44, 46)
         }
-        .test {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        
+        .chatapp {
+            height: 100%;
+            width: 100%;
+
         }
 
-        h1 {
-            color: white;
+        .chatmessages {
+            background-color: white;
+            width: 100%;
+            height: 70%
+        }
+
+        .sender {
+            display: block;
+            width: 100%;
+            height: 30%;
+            resize: none;
         }
     </style>
-    <div class="test"><h1>CHAT</h1></div>
+    <div class="chatapp">
+        <div class="chatmessages"></div>
+        <textarea class="sender" onclick="this.focus()"></textarea>
+        <input type="submit">
+    </div>
 `
 
 customElements.define('chat-app',
