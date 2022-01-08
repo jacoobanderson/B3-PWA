@@ -1,3 +1,5 @@
+import '../chat-nickname/index.js'
+
 const template = document.createElement('template')
 
 template.innerHTML = `
@@ -14,6 +16,7 @@ template.innerHTML = `
             width: 100%;
             display: grid;
             grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+            display: none;
         }
 
         .chatmessages {
@@ -48,6 +51,7 @@ template.innerHTML = `
         <textarea class="sender"></textarea>
         <input type="submit" class="submitmessage">
     </div>
+    <chat-nickname></chat-nickname>
 `
 
 customElements.define('chat-app',
