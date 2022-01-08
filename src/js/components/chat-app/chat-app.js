@@ -108,6 +108,8 @@ customElements.define('chat-app',
 
         #nickname
 
+        #webSocketUrl
+
         constructor() {
             super()
             this.attachShadow({ mode: 'open' })
@@ -119,14 +121,19 @@ customElements.define('chat-app',
             this.#submitmessage = this.shadowRoot.querySelector('.submitmessage')
             this.#hideNickname = this.shadowRoot.querySelector('.hidenickname')
             this.#nickname = undefined
+            this.#webSocketUrl = new WebSocket('wss://courselab.lnu.se/message-app/socket')
+
+            // socket key eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd
         }
 
         connectedCallback () {
             this.#checkIfNickname()
             this.#hideNickname.addEventListener('nicknameSubmit', () => this.#showChat())
             this.#hideNickname.addEventListener('nicknameSubmit', () => this.#getNickname())
+            this.#webSocketUrl.addEventListener('message', (event) => { console.log(event.data) })
         }
 
+        // Remove and append nickname instead?
         #showChat() {
             this.#hideNickname.style.display = 'none'
             this.#chatapp.style.display = 'flex'
