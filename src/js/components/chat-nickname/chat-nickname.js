@@ -95,7 +95,7 @@ customElements.define('chat-nickname',
 
         #setNicknameValue () {
             const value = this.#getNicknameValue()
-            window.localStorage.setItem('nickname', JSON.stringify(value))
+            window.localStorage.setItem('nickname', value)
             this.#input.value = ''
         }
     })

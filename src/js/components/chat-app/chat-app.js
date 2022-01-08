@@ -81,10 +81,6 @@ template.innerHTML = `
     </style>
     <div class="chatapp">
         <div class="chatmessages">
-            <p>Nogjake:<br>Hej jag bara testar hur detta fungerar just nu och ska styleadetta vi får se hur det går o det men blir nog bra.</p>
-            <p>Nogjake:<br>Hej jag bara testar hur detta fungerar just nu och ska styleadetta vi får se hur det går o det men blir nog bra.</p>
-            <p>Nogjake:<br>Hej jag bara testar hur detta fungerar just nu och ska styleadetta vi får se hur det går o det men blir nog bra.</p>
-            <p>Nogjake:<br>Hej jag bara testar hur detta fungerar just nu och ska styleadetta vi får se hur det går o det men blir nog bra.</p>
         </div>
         <textarea class="sender"></textarea>
         <button class="submitmessage">Send</button>
@@ -128,9 +124,18 @@ customElements.define('chat-app',
 
         connectedCallback () {
             this.#checkIfNickname()
+            this.#sender.focus()
             this.#hideNickname.addEventListener('nicknameSubmit', () => this.#showChat())
             this.#hideNickname.addEventListener('nicknameSubmit', () => this.#getNickname())
-            this.#webSocketUrl.addEventListener('message', (event) => { console.log(event.data) })
+            this.#webSocketUrl.addEventListener('message', (event) => this.#showMessages(event))
+            this.#submitmessage.addEventListener('click', () => this.#sendMessage())
+            this.#sender.addEventListener('keypress', (event) => this.#sendMessageOnEnter(event))
+        }
+
+        #sendMessageOnEnter(event) {
+            if (event.key === 'Enter') {
+                this.#sendMessage()
+            }
         }
 
         // Remove and append nickname instead?
@@ -154,5 +159,38 @@ customElements.define('chat-app',
                 this.#hideNickname.style.display = 'flex'
                 this.#chatapp.style.display = 'none'
             }
+        }
+
+        #showMessages (event) {
+            const data = JSON.parse(event.data)
+            if (data.type !== 'heartbeat') {
+                const messageElement = document.createElement('p')
+                messageElement.textContent = `${data.username}: ${data.data}`
+                this.#chatmessages.appendChild(messageElement)
+            }
+
+            // automatic scroll to most recent message.
+            this.#chatmessages.scrollTop = this.#chatmessages.scrollHeight
+
+            // Clean
+            if (this.shadowRoot.querySelectorAll('p').length > 20) {
+                this.#chatmessages.removeChild(this.shadowRoot.querySelectorAll('p')[0])
+            }
+
+        }
+
+        #sendMessage () {
+            const message = this.#sender.value
+            const nickname = this.#nickname
+
+            if (this.#webSocketUrl.readyState === 1) {
+                this.#webSocketUrl.send(JSON.stringify({
+                    type: 'message',
+                    data: `${message}`,
+                    username: `${nickname}`,
+                    key: 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
+                }))
+            }
+            this.#sender.value = ''
         }
     })
