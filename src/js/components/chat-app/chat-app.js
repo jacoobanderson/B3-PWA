@@ -45,8 +45,8 @@ template.innerHTML = `
     </style>
     <div class="chatapp">
         <div class="chatmessages"></div>
-        <textarea class="sender" onclick="this.focus()"></textarea>
-        <input type="submit">
+        <textarea class="sender"></textarea>
+        <input type="submit" class="submitmessage">
     </div>
 `
 
@@ -54,9 +54,26 @@ customElements.define('chat-app',
 
     class extends HTMLElement {
 
+        #chatapp
+
+        #chatmessages
+
+        #sender
+
+        #submitmessage
+
         constructor() {
             super()
             this.attachShadow({ mode: 'open' })
                 .appendChild(template.content.cloneNode(true))
+
+            this.#chatapp = this.shadowRoot.querySelector('.chatapp')
+            this.#chatmessages = this.shadowRoot.querySelector('.chatmessages')
+            this.#sender = this.shadowRoot.querySelector('.sender')
+            this.#submitmessage = this.shadowRoot.querySelector('.submitmessage')
+        }
+
+        connectedCallback () {
+            return
         }
     })
