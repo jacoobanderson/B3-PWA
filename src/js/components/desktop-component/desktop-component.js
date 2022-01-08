@@ -180,7 +180,7 @@ customElements.define('desktop-component',
         #appOnClick(application) {
           // Each time the app is clicked the position changes, prevents windows from stacking.
           // Checks how many windows currently.
-          const amountOfWindows = this.#desktop.querySelectorAll('draggable-window').length
+          const amountOfWindows = this.#desktop.querySelectorAll('draggable-window').length + 1
 
           // Determines how much the position should change depending on how many windows are opened.
           this.#amountOfClicks = amountOfWindows * 20

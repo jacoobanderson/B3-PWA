@@ -8,7 +8,7 @@ template.innerHTML = `
             display: block;
             height: 500px;
             width: 650px;
-            background-color: rgb(44, 44, 46)
+            background-color: rgb(44, 44, 46);
         }
 
         .chatapp {
@@ -16,6 +16,7 @@ template.innerHTML = `
             width: 100%;
             display: flex;
             flex-direction: column;
+            display: none;
         }
 
         .chatmessages {
@@ -66,7 +67,7 @@ template.innerHTML = `
         }
 
         .hidenickname {
-            display: none;
+            
         }
 
         p {
@@ -97,11 +98,15 @@ customElements.define('chat-app',
 
         #chatapp
 
+        #hideNickname
+
         #chatmessages
 
         #sender
 
         #submitmessage
+
+        #nickname
 
         constructor() {
             super()
@@ -112,9 +117,35 @@ customElements.define('chat-app',
             this.#chatmessages = this.shadowRoot.querySelector('.chatmessages')
             this.#sender = this.shadowRoot.querySelector('.sender')
             this.#submitmessage = this.shadowRoot.querySelector('.submitmessage')
+            this.#hideNickname = this.shadowRoot.querySelector('.hidenickname')
+            this.#nickname = undefined
         }
 
         connectedCallback () {
-            return
+            this.#checkIfNickname()
+            this.#hideNickname.addEventListener('nicknameSubmit', () => this.#showChat())
+            this.#hideNickname.addEventListener('nicknameSubmit', () => this.#getNickname())
+        }
+
+        #showChat() {
+            this.#hideNickname.style.display = 'none'
+            this.#chatapp.style.display = 'flex'
+        }
+
+        #getNickname () {
+            this.#nickname = window.localStorage.getItem('nickname')
+            return this.#nickname
+        }
+
+        #checkIfNickname () {
+            // Checks if there is a nickname, if so - show the chat.
+            if (this.#getNickname() !== null && this.#getNickname().length > 0) {
+                this.#hideNickname.style.display = 'none'
+                this.#chatapp.style.display = 'flex'
+            // Else show the nickname input.
+            } else {
+                this.#hideNickname.style.display = 'flex'
+                this.#chatapp.style.display = 'none'
+            }
         }
     })

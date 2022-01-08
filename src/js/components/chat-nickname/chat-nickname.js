@@ -59,15 +59,43 @@ customElements.define('chat-nickname',
 
     class extends HTMLElement {
 
+        #nicknameinput
+
+        #title
+
+        #input
+
+        #button
+
         constructor() {
             super()
             this.attachShadow({ mode: 'open' })
                 .appendChild(template.content.cloneNode(true))
 
-            // this.#chatapp = this.shadowRoot.querySelector('.chatapp')
+            this.#nicknameinput = this.shadowRoot.querySelector('.nicknameinput')
+            this.#title = this.shadowRoot.querySelector('.title')
+            this.#input = this.shadowRoot.querySelector('.input')
+            this.#button = this.shadowRoot.querySelector('.button')
         }
 
         connectedCallback () {
-            return
+            this.#button.addEventListener('click', () => this.#setNicknameValue())
+            this.#button.addEventListener('click', (event) => this.#nicknameSubmitEvent(event))
+        }
+
+        #nicknameSubmitEvent () {
+            this.dispatchEvent(new CustomEvent('nicknameSubmit', {
+                bubbles: true
+            }))
+        }
+        
+        #getNicknameValue () {
+            return this.#input.value
+        }
+
+        #setNicknameValue () {
+            const value = this.#getNicknameValue()
+            window.localStorage.setItem('nickname', JSON.stringify(value))
+            this.#input.value = ''
         }
     })
