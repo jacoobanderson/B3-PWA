@@ -4,7 +4,7 @@ template.innerHTML = `
     <style>
         :host {
             display: block;
-            height: 400px;
+            height: 675px;
             width: 650px;
             background-color: rgb(44, 44, 46)
         }

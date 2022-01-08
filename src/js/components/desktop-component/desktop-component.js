@@ -77,6 +77,23 @@ template.innerHTML = `
         }
       }
 
+      .closeanimation {
+            animation-duration: 0.5s;
+            animation-name: out;
+          }
+
+          @keyframes out {
+            from {
+              transform: scale(1);
+              opacity: 1;
+            }
+          
+            to {
+              transform: scale(0);
+              opacity: 0;
+            }
+          }
+
       .test {
         width: 50px;
         height: 50px;
@@ -140,8 +157,18 @@ customElements.define('desktop-component',
 
           // Put in seperate method.
           this.#desktop.addEventListener('draggable-window:closed', (event) => {
-            this.#desktop.removeChild(event.target)
-          })
+            const target = event.target
+            const desktop = this.#desktop
+            desktop.removeChild(target)
+          // Should i use this effect?
+          // Starts the close animation.
+          // target.classList.add('closeanimation')
+
+          // Allows the close animation to finish before removing the window from the DOM.
+          // setTimeout(function () {
+          //   desktop.removeChild(target)
+          //  }, 500)
+           })
 
           // Put in seperate method.
           this.#desktop.addEventListener('windowClickCount', (event) => {
@@ -150,8 +177,6 @@ customElements.define('desktop-component',
           })
         }
 
-
-        // FIX - INSTEAD MAKE FUNCTION THAT CAN BE USED FOR ALL APPS AND TAKES APP AS ARGUMENT
         #appOnClick(application) {
           // Each time the app is clicked the position changes, prevents windows from stacking.
           // Checks how many windows currently.
