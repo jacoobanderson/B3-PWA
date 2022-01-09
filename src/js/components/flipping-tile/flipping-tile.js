@@ -71,11 +71,11 @@ customElements.define('flipping-tile',
         }
 
         static get observedAttributes () {
-            return ['hidden', 'inactive']
+            return ['hidden', 'disabled']
         }
 
         #flipTile () {
-            if (!(this.hasAttribute('inactive') || this.hasAttribute('hidden'))) {
+            if (!(this.hasAttribute('disabled') || this.hasAttribute('hidden'))) {
                 if (this.hasAttribute('front-shown')) {
                     this.removeAttribute('front-shown')
                 } else {
@@ -89,11 +89,11 @@ customElements.define('flipping-tile',
         }
 
         attributeChangedCallback (name, oldValue, newValue) {
-            if (name === 'inactive' || name === 'hidden') {
+            if (name === 'disablede' || name === 'hidden') {
                 if (newValue || newValue === '') {
-                    this.#flippingtile.setAttribute('inactive', '')
+                    this.#flippingtile.setAttribute('disabled', '')
                 } else {
-                    this.#flippingtile.removeAttribute('inactive')
+                    this.#flippingtile.removeAttribute('disabled')
                 }
             }
           }

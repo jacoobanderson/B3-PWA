@@ -49,6 +49,10 @@ customElements.define('memory-game',
 
         #imgs
 
+        #twoTiles
+
+        #attempts
+
         constructor() {
             super()
             this.attachShadow({ mode: 'open' })
@@ -56,11 +60,13 @@ customElements.define('memory-game',
 
             this.#game = this.shadowRoot.querySelector('.game')
             this.#imgs = IMG_PATHS
+            this.#twoTiles = []
+            this.#attempts = 0
         }
 
         connectedCallback() {
             console.log(IMG_PATHS)
-            this.#game.addEventListener('flipped', () => this.#tileIsFlipped())
+            this.#game.addEventListener('flipped', (event) => this.#tileIsFlipped(event))
             this.#startGame(this.#imgs, 16)
         }
 
@@ -88,8 +94,30 @@ customElements.define('memory-game',
             return tiles
         }
 
-        #tileIsFlipped () {
+        #tileIsFlipped (event) {
+
+            if (this.#twoTiles.length < 2) {
+                this.#twoTiles.push(event.target)
+            } else {
+                this.#twoTiles = [event.target]
+            }
             
+            if (this.#twoTiles.length === 2) {
+                this.#attempts++
+
+                if (this.#twoTiles[0].isEqualNode(this.#twoTiles[1])) {
+                    this.#twoTiles[0].setAttribute('disabled', '')
+                    this.#twoTiles[1].setAttribute('disabled', '')
+                    console.log('same')
+                } else {
+                    setTimeout(() => {
+                        this.#twoTiles[0].removeAttribute('front-shown')
+                        this.#twoTiles[1].removeAttribute('front-shown')
+                    }, 1000)
+                }
+            }
+            console.log(this.#twoTiles)
+            console.log(this.#attempts)
         }
 
         #startGame(imgs, size) {
@@ -100,6 +128,7 @@ customElements.define('memory-game',
             }
         }
 
+        //This shuffler is from the exercise.
         #shuffle (deck) {
             for (let i = deck.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
