@@ -20,8 +20,11 @@ template.innerHTML = `
         }
 
         .chatmessages {
+            display: block;
+            word-break: break-all;
             background-color: white;
             width: 603px;
+            max-width: 603px;
             height: 350px;
             color: white;
             justify-self: center;
@@ -76,7 +79,21 @@ template.innerHTML = `
             width: 90%;
             padding: 10px;
             background-color: rgb(52, 130, 50);
+            animation-duration: 0.5s;
+            animation-name: pop;
         }
+
+        @keyframes pop {
+            from {
+              transform: scale(0);
+              opacity: 0;
+            }
+          
+            to {
+              transform: scale(1);
+              opacity: 1;
+            }
+          }
 
     </style>
     <div class="chatapp">
@@ -165,10 +182,11 @@ customElements.define('chat-app',
             const data = JSON.parse(event.data)
             if (data.type !== 'heartbeat') {
                 const messageElement = document.createElement('p')
-                messageElement.textContent = `${data.username}: ${data.data}`
+                const message = data.data
+                const smileyMessage = this.#addSmiley(message)
+                messageElement.textContent = `${data.username}: ${smileyMessage}`
                 this.#chatmessages.appendChild(messageElement)
             }
-
             // automatic scroll to most recent message.
             this.#chatmessages.scrollTop = this.#chatmessages.scrollHeight
 
@@ -192,5 +210,30 @@ customElements.define('chat-app',
                 }))
             }
             this.#sender.value = ''
+        }
+
+        #addSmiley(string) {
+            // Make better
+            let smileyString = string
+
+            if (string.match(/:\)/g)) {
+                smileyString = smileyString.replace(/:\)/g, String.fromCodePoint(128578))
+            }
+            if (string.match(/:D/g)) {
+                smileyString = smileyString.replace(/:D/g, String.fromCodePoint(128512))
+            }
+            if (string.match(/;D/g)) {
+                smileyString = smileyString.replace(/;D/g, String.fromCodePoint(128514))
+            }
+            if (string.match(/:O/g)) {
+                smileyString = smileyString.replace(/:O/g, String.fromCodePoint(128559))
+            }
+            if (string.match(/:\(/g)) {
+                smileyString = smileyString.replace(/:\(/g, String.fromCodePoint(128577))
+            }
+            if (string.match(/:P/g)) {
+                smileyString = smileyString.replace(/:P/g, String.fromCodePoint(128540))
+            }
+            return smileyString
         }
     })

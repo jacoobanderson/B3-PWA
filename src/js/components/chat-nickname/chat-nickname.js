@@ -58,11 +58,6 @@ template.innerHTML = `
 customElements.define('chat-nickname',
 
     class extends HTMLElement {
-
-        #nicknameinput
-
-        #title
-
         #input
 
         #button
@@ -72,15 +67,21 @@ customElements.define('chat-nickname',
             this.attachShadow({ mode: 'open' })
                 .appendChild(template.content.cloneNode(true))
 
-            this.#nicknameinput = this.shadowRoot.querySelector('.nicknameinput')
-            this.#title = this.shadowRoot.querySelector('.title')
             this.#input = this.shadowRoot.querySelector('.input')
             this.#button = this.shadowRoot.querySelector('.button')
         }
 
         connectedCallback () {
             this.#button.addEventListener('click', () => this.#setNicknameValue())
-            this.#button.addEventListener('click', (event) => this.#nicknameSubmitEvent(event))
+            this.#button.addEventListener('click', () => this.#nicknameSubmitEvent())
+            this.#input.addEventListener('keypress', (event) => this.#onEnter(event))
+        }
+
+        #onEnter(event) {
+            if (event.key === 'Enter') {
+                this.#setNicknameValue()
+                this.#nicknameSubmitEvent()
+            }
         }
 
         #nicknameSubmitEvent () {
