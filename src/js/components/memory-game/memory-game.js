@@ -16,26 +16,28 @@ template.innerHTML = `
             background-color: rgb(44, 44, 46)
         }
         .game {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr 1fr;
+            grid-gap: 10px;
         }
 
         h1 {
             color: white;
         }
 
+        img {
+            width: 75px;
+            height: 75px;
+        }
+
         flipping-tile::part(front) {
-      border-width: 5px;
-      background: black url("${IMG_PATHS[0]}") no-repeat center/80%;
-    }
+            background: black;
+        }
 
 
     </style>
     <div class="game">
-        <flipping-tile>
-            <img />
-        </flipping-tile>
     </div>
 `
 
@@ -45,16 +47,63 @@ customElements.define('memory-game',
 
         #game
 
+        #imgs
+
         constructor() {
             super()
             this.attachShadow({ mode: 'open' })
                 .appendChild(template.content.cloneNode(true))
 
             this.#game = this.shadowRoot.querySelector('.game')
+            this.#imgs = IMG_PATHS
         }
 
         connectedCallback() {
             console.log(IMG_PATHS)
-            this.#game.addEventListener('flipped', () => console.log('flip'))
+            this.#game.addEventListener('flipped', () => this.#tileIsFlipped())
+            this.#startGame(this.#imgs, 16)
+        }
+
+        #createFlippingTiles (imgs, size) {
+            const tiles = []
+
+            for (let i = 0; i < size / 2; i++) {
+                const flippingTile = document.createElement('flipping-tile')
+                const image = document.createElement('img')
+                image.setAttribute('src', `${imgs[i]}`)
+                flippingTile.appendChild(image)
+                tiles.push(flippingTile)
+                //this.#game.appendChild(flippingTile)
+            }
+
+            for (let i = 0; i < size / 2; i++) {
+                const flippingTile = document.createElement('flipping-tile')
+                const image = document.createElement('img')
+                image.setAttribute('src', `${imgs[i]}`)
+                flippingTile.appendChild(image)
+                tiles.push(flippingTile)
+                //this.#game.appendChild(flippingTile)
+            }
+
+            return tiles
+        }
+
+        #tileIsFlipped () {
+            
+        }
+
+        #startGame(imgs, size) {
+            const tiles = this.#createFlippingTiles(imgs, size)
+            this.#shuffle(tiles)
+            for (let i = 0; i < size; i++) {
+                this.#game.appendChild(tiles[i])
+            }
+        }
+
+        #shuffle (deck) {
+            for (let i = deck.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [deck[i], deck[j]] = [deck[j], deck[i]]
+              }
         }
     })
