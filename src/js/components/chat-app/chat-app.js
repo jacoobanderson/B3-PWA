@@ -24,7 +24,6 @@ template.innerHTML = `
             word-break: break-all;
             background-color: white;
             width: 603px;
-            max-width: 603px;
             height: 350px;
             color: white;
             justify-self: center;
@@ -34,6 +33,7 @@ template.innerHTML = `
             margin-top: 10px;
             margin-bottom: 10px;
             overflow-y: scroll;
+            opacity: 0.9;
         }
 
         .sender {
