@@ -96,14 +96,22 @@ template.innerHTML = `
             }
           }
 
-      .test {
-        width: 50px;
-        height: 50px;
-        margin-left: 8px;
-        margin-right: 8px;
-        border-radius: 10px;
-        border: solid 1px white;
-    }
+        .desktopApps {
+          display: grid;
+          width: 80px;
+          height: 80px;
+          justify-self: center;
+          margin-top: 20px;
+        }
+
+        .desktopApps p {
+          font-size: 20px;
+          justify-self: center;
+          margin: 5px;
+          color: white;
+          width: 100px;
+          word-break: break-word;
+        }
 
     </style>
     <div class="desktop">
@@ -116,9 +124,6 @@ template.innerHTML = `
             <app-icon slot="memory" class="memory" src="./js/components/desktop-component/img/app_drawer.png"></app-icon>
             <app-icon slot="chat" class="chat" src="./js/components/desktop-component/img/chat_blank.png"></app-icon>
             <app-icon slot="terminal" class="terminal" src="./js/components/desktop-component/img/terminal.png"></app-icon>
-            <div slot="testone" class="test"></div>
-            <div slot="testtwo" class="test"></div>
-            <div slot="testthree" class="test"></div>
         </mac-dock>
     </div>
 `
@@ -157,6 +162,8 @@ customElements.define('desktop-component',
           this.#terminal.addEventListener('click', () => this.#appOnClick('terminal'))
           this.#memory.addEventListener('click', () => this.#appOnClick('memory'))
           this.#chat.addEventListener('click', () => this.#appOnClick('chat'))
+          this.#desktop.addEventListener('terminal-app:touch', (event) => this.#handleFileCreationEvent(event.detail, 'touch'))
+          this.#desktop.addEventListener('terminal-app:mkdir', (event) => this.#handleFileCreationEvent(event.detail, 'mkdir'))
 
           // Put in seperate method.
           this.#desktop.addEventListener('draggable-window:closed', (event) => {
@@ -178,15 +185,6 @@ customElements.define('desktop-component',
             this.#zIndexClicks++
             event.target.style.zIndex = `${this.#zIndexClicks}`
           })
-
-          this.#test('pdf')
-          this.#test('pdf')
-          this.#test('txt')
-          this.#test('folder')
-          this.#test('pdf')
-          this.#test('pdf')
-          this.#test('txt')
-          this.#test('folder')
         }
 
         #appOnClick(application) {
@@ -210,9 +208,28 @@ customElements.define('desktop-component',
           this.#desktop.appendChild(window)
         }
 
-        #test (file) {
+        #appendFileToDesktop (fileType, fileName) {
+          const container = document.createElement('div')
+          const pElement = document.createElement('p')
+          pElement.textContent = fileName
           const createFile = document.createElement('terminal-file')
-          createFile.setAttribute('src', file)
-          this.#desktop.appendChild(createFile)
+          createFile.setAttribute('src', fileType)
+          container.appendChild(createFile)
+          container.appendChild(pElement)
+          container.classList.add('desktopApps')
+          this.#desktop.appendChild(container)
+        }
+
+        #handleFileCreationEvent (detail, command) {
+          let fileName = detail.fileName
+          let fileType = detail.fileType
+
+          if (command === 'touch') {
+            this.#appendFileToDesktop(fileType, fileName)
+          } else if (command === 'mkdir') {
+            fileName = detail.folderName
+            fileType = detail.folder
+            this.#appendFileToDesktop(fileType, fileName)
+          }
         }
     })

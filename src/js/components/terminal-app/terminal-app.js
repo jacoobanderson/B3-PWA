@@ -20,6 +20,8 @@ template.innerHTML = `
             overflow: hidden;
             font-size: 15px;
             color: rgb(184, 184, 186);
+            padding: 0;
+            margin: 0;
         }
 
         #input {
@@ -47,6 +49,8 @@ class extends HTMLElement {
     #output
 
     #container
+    
+    #inputcontainer
 
     constructor() {
         super()
@@ -56,6 +60,7 @@ class extends HTMLElement {
         this.#input = this.shadowRoot.querySelector('#input')
         this.#output = this.shadowRoot.querySelector('#output')
         this.#container = this.shadowRoot.querySelector('#container')
+        this.#inputcontainer = this.shadowRoot.querySelectorAll('#inputcontainer')
     }
 
     connectedCallback() {
@@ -81,17 +86,36 @@ class extends HTMLElement {
     }
 
     #processInput(inputString) {
+            const command = inputString.split(' ')[0]
+            const file = inputString.split(' ')[1]
+
         if (inputString === 'help') {
           this.#printProcessedInputOutput('Commands: ')
           this.#printProcessedInputOutput('  mkdir <name> - To create a folder.')
           this.#printProcessedInputOutput('  touch <name>.filetype - To create a file.')
           this.#printProcessedInputOutput('  clear - To clear the terminal.')
-        }
-        if (inputString === 'clear') {
-            console.log(this.#container.firstChild)
-            // while(this.#container.firstChild !== 'div') {
-            //     this.#container.removeChild(this.#container.firstChild)
-            // }
+        } else if (inputString === 'clear') {
+            while(this.#output.firstChild) {
+                   this.#output.removeChild(this.#output.firstChild)
+            }
+        } else if (command === 'touch') {
+            const fileName = file.split('.')[0]
+            const fileType = file.split('.')[1]
+            console.log(fileName)
+            console.log(fileType)
+            this.dispatchEvent(new CustomEvent('terminal-app:touch', {
+                bubbles: true,
+                composed: true,
+                detail: { fileName, fileType }
+            }))
+        } else if (command === 'mkdir') {
+            const folder = 'folder'
+            const folderName = inputString.split(' ')[1]
+            this.dispatchEvent(new CustomEvent('terminal-app:mkdir', {
+                bubbles: true,
+                composed: true,
+                detail: { folderName, folder }
+            }))
         }
       }
 
