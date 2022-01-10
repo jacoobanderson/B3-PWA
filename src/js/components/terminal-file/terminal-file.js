@@ -4,8 +4,8 @@ const template = document.createElement('template')
 template.innerHTML = `
     <style>
         .icon {
-            width: 100px;
-            height: 100px;
+            width: 80px;
+            height: 80px;
             z-index: 5;
         }
     </style>

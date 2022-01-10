@@ -101,11 +101,4 @@ customElements.define('flipping-tile',
                 }
             }
           }
-
-          checkIfSame (tile) {
-            return this.isEqualNode(tile)
-          }
-     
-     
-
     })

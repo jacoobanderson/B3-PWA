@@ -35,7 +35,7 @@ template.innerHTML = `
    <div id='container'>
         <div id='output'></div>
         <div id='inputcontainer'>
-            <span>&nbsp;jacobandersson@Jacobs-MacBook-Air portfolio-app %&nbsp; </span><input id='input' type='text'>
+            <span id="inputspan">&nbsp;jacobandersson@Jacobs-MacBook-Air portfolio-app %&nbsp; </span><input id='input' type='text'>
         </div>
     </div>
 `
@@ -49,6 +49,8 @@ class extends HTMLElement {
     #output
 
     #container
+
+    #inputspan
     
     #inputcontainer
 
@@ -60,10 +62,12 @@ class extends HTMLElement {
         this.#input = this.shadowRoot.querySelector('#input')
         this.#output = this.shadowRoot.querySelector('#output')
         this.#container = this.shadowRoot.querySelector('#container')
-        this.#inputcontainer = this.shadowRoot.querySelectorAll('#inputcontainer')
+        this.#inputcontainer = this.shadowRoot.querySelector('#inputcontainer')
+        this.#inputspan = this.shadowRoot.querySelector('#inputspan')
     }
 
     connectedCallback() {
+        this.#inputspan.textContent = `${this.#getUsername()}@${this.#getUsername()}s-PWD desktop-application % `
         this.#input.addEventListener('keypress', (event) => this.#onEnter(event))
         this.#container.addEventListener('click', (event) => this.#focusInput(event))
         this.#focusInput()
@@ -75,7 +79,8 @@ class extends HTMLElement {
 
     #printInput(inputString) {
         const div = document.createElement('div')
-        div.textContent += 'jacobandersson@Jacobs-MacBook-Air portfolio-app %' + inputString
+        div.textContent += `${this.#getUsername()}@${this.#getUsername()}s-PWD desktop-application %` + inputString
+        //'jacobandersson@Jacobs-MacBook-Air portfolio-app %'
         this.#output.appendChild(div)
     }
 
@@ -90,10 +95,12 @@ class extends HTMLElement {
             const file = inputString.split(' ')[1]
 
         if (inputString === 'help') {
+          this.#printSpace()
           this.#printProcessedInputOutput('Commands: ')
           this.#printProcessedInputOutput('  mkdir <name> - To create a folder.')
           this.#printProcessedInputOutput('  touch <name>.filetype - To create a file.')
           this.#printProcessedInputOutput('  clear - To clear the terminal.')
+          this.#printSpace()
         } else if (inputString === 'clear') {
             while(this.#output.firstChild) {
                    this.#output.removeChild(this.#output.firstChild)
@@ -125,5 +132,16 @@ class extends HTMLElement {
             this.#processInput(this.#input.value)
             this.#input.value = ''
         }
+    }
+
+    #getUsername () {
+        const username = window.localStorage.getItem('nickname')
+        return username
+    }
+
+    #printSpace () {
+        const div = document.createElement('div')
+        div.style.height = '17px'
+        this.#output.appendChild(div)
     }
 })

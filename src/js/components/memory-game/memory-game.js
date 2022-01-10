@@ -20,10 +20,12 @@ template.innerHTML = `
 
         .startgame {
             display: block;
+            color: white;
         }
 
         .playagain {
             display: none;
+            color: white;
         }
 
         .game {
@@ -48,6 +50,14 @@ template.innerHTML = `
             background: black;
         }
 
+        .timerClock {
+            justify-self: center;
+            align-self: center;
+            color: white;
+            font-size: 30px;
+            display: none;
+        }
+
 
     </style>
     <div class="game">
@@ -59,16 +69,16 @@ template.innerHTML = `
         <button id="hardbutton">Hard</button>
     </div>
     <div class="playagain">
-        <h2>Current Highscore: </h2>
         <h2 id="score"></h2>
+        <h2 id="timeScore"></h2>
         <button>Play Again</button>
     </div>
+    <div class="timerClock">0</div>
 `
 
 customElements.define('memory-game',
 
     class extends HTMLElement {
-
         #game
 
         #imgs
@@ -94,8 +104,14 @@ customElements.define('memory-game',
         #score
 
         #timer
-        
-        #timerStop
+
+        #time
+
+        #timerClock
+
+        #timeScore
+
+        #finalTime
 
         constructor() {
             super()
@@ -114,8 +130,11 @@ customElements.define('memory-game',
             this.#startgame = this.shadowRoot.querySelector('.startgame')
             this.#playagain = this.shadowRoot.querySelector('.playagain')
             this.#score = this.shadowRoot.querySelector('#score')
-            this.#timer = 0
-            this.#timerStop = false
+            this.#timer = undefined
+            this.#time = 0
+            this.#timerClock = this.shadowRoot.querySelector('.timerClock')
+            this.#finalTime = undefined
+            this.#timeScore = this.shadowRoot.querySelector('#timeScore')
         }
 
         connectedCallback() {
@@ -180,26 +199,29 @@ customElements.define('memory-game',
             if (this.#sameTileAmount === 2 && this.#difficulty === '4') {
                 this.#score.textContent = `Your score: ${this.#attempts}`
                 this.#attempts = 0
+                this.#stopTime()
                 setTimeout(() => {
                     this.#game.style.display = 'none'
+                    this.#timerClock.style.display = 'none'
                     this.#playagain.style.display = 'block'
-                    this.#timer = true
                 }, 1200)
             } else if (this.#sameTileAmount === 4 && this.#difficulty === '8') {
                 this.#score.textContent = `Your score: ${this.#attempts}`
                 this.#attempts = 0
+                this.#stopTime()
                 setTimeout(() => {
                     this.#game.style.display = 'none'
+                    this.#timerClock.style.display = 'none'
                     this.#playagain.style.display = 'block'
-                    this.#timer = true
                 }, 1200)
             } else if (this.#sameTileAmount === 8 && this.#difficulty === '16') {
                 this.#score.textContent = `Your score: ${this.#attempts}`
                 this.#attempts = 0
+                this.#stopTime()
                 setTimeout(() => {
                     this.#game.style.display = 'none'
+                    this.#timerClock.style.display = 'none'
                     this.#playagain.style.display = 'block'
-                    this.#timer = true
                 }, 1200)
             }
         }
@@ -207,7 +229,7 @@ customElements.define('memory-game',
         #startGame(imgs, size) {
             this.#startgame.style.display = 'none'
             this.#game.style.display = 'grid'
-
+            this.#timeTheGame()
             if (size === 4) {
                 this.#game.classList.add('easy')
             } else {
@@ -231,17 +253,9 @@ customElements.define('memory-game',
             for (let i = 0; i < size; i++) {
                 this.#game.appendChild(tiles[i])
             }
-                // const timer = setInterval(() => {
-                //   console.log(this.#timer)
-                //   if (this.#timerStop === true) {
-                //       clearInterval(timer)
-                //   } else {
-                //     this.#timer += 1
-                //   }
-                // }, 1000)
         }
 
-        //This shuffler is from the exercise.
+        // This shuffler is from the exercise.
         #shuffle (deck) {
             for (let i = deck.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -254,8 +268,25 @@ customElements.define('memory-game',
                 this.#game.removeChild(this.#game.firstChild)
             }
             this.#playagain.style.display = 'none'
+            this.#timerClock.display = 'none'
             this.#startgame.style.display = 'block'
             this.#sameTileAmount = 0
             this.#difficulty = undefined
+        }
+
+        #timeTheGame () {
+            this.#timerClock.style.display = 'block'
+            this.#timer = setInterval(() => {
+                this.#time++
+                console.log(this.#time)
+                this.#timerClock.textContent = this.#time
+            }, 1000)
+        }
+
+        #stopTime () {
+            this.#finalTime = this.#time
+            clearInterval(this.#timer)
+            this.#time = 0
+            this.#timeScore.textContent = `Your time was: ${this.#finalTime}`
         }
     })
