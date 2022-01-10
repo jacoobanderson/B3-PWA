@@ -60,7 +60,7 @@ template.innerHTML = `
     </div>
     <div class="playagain">
         <h2>Current Highscore: </h2>
-        <h2> Your score: </h2>
+        <h2 id="score"></h2>
         <button>Play Again</button>
     </div>
 `
@@ -91,6 +91,12 @@ customElements.define('memory-game',
 
         #difficulty
 
+        #score
+
+        #timer
+        
+        #timerStop
+
         constructor() {
             super()
             this.attachShadow({ mode: 'open' })
@@ -107,6 +113,9 @@ customElements.define('memory-game',
             this.#difficulty = undefined
             this.#startgame = this.shadowRoot.querySelector('.startgame')
             this.#playagain = this.shadowRoot.querySelector('.playagain')
+            this.#score = this.shadowRoot.querySelector('#score')
+            this.#timer = 0
+            this.#timerStop = false
         }
 
         connectedCallback() {
@@ -126,7 +135,6 @@ customElements.define('memory-game',
                 image.setAttribute('src', `${imgs[i]}`)
                 flippingTile.appendChild(image)
                 tiles.push(flippingTile)
-                //this.#game.appendChild(flippingTile)
             }
 
             for (let i = 0; i < size / 2; i++) {
@@ -135,20 +143,21 @@ customElements.define('memory-game',
                 image.setAttribute('src', `${imgs[i]}`)
                 flippingTile.appendChild(image)
                 tiles.push(flippingTile)
-                //this.#game.appendChild(flippingTile)
             }
 
             return tiles
         }
 
         #tileIsFlipped (event) {
+            const flippingTiles = Array.from(this.#game.querySelectorAll('flipping-tile'))
+            // fix, should not be able to press more than two tiles.
 
             if (this.#twoTiles.length < 2) {
                 this.#twoTiles.push(event.target)
             } else {
                 this.#twoTiles = [event.target]
             }
-            
+
             if (this.#twoTiles.length === 2) {
                 this.#attempts++
 
@@ -156,6 +165,10 @@ customElements.define('memory-game',
                     this.#twoTiles[0].setAttribute('disabled', '')
                     this.#twoTiles[1].setAttribute('disabled', '')
                     this.#sameTileAmount++
+                    setTimeout(() => {
+                        this.#twoTiles[0].setAttribute('hidden', '')
+                        this.#twoTiles[1].setAttribute('hidden', '')
+                    }, 1200)
                 } else {
                     setTimeout(() => {
                         this.#twoTiles[0].removeAttribute('front-shown')
@@ -165,17 +178,30 @@ customElements.define('memory-game',
             }
 
             if (this.#sameTileAmount === 2 && this.#difficulty === '4') {
-                this.#game.style.display = 'none'
-                this.#playagain.style.display = 'block'
+                this.#score.textContent = `Your score: ${this.#attempts}`
+                this.#attempts = 0
+                setTimeout(() => {
+                    this.#game.style.display = 'none'
+                    this.#playagain.style.display = 'block'
+                    this.#timer = true
+                }, 1200)
             } else if (this.#sameTileAmount === 4 && this.#difficulty === '8') {
-                this.#game.style.display = 'none'
-                this.#playagain.style.display = 'block'
+                this.#score.textContent = `Your score: ${this.#attempts}`
+                this.#attempts = 0
+                setTimeout(() => {
+                    this.#game.style.display = 'none'
+                    this.#playagain.style.display = 'block'
+                    this.#timer = true
+                }, 1200)
             } else if (this.#sameTileAmount === 8 && this.#difficulty === '16') {
-                this.#game.style.display = 'none'
-                this.#playagain.style.display = 'block'
+                this.#score.textContent = `Your score: ${this.#attempts}`
+                this.#attempts = 0
+                setTimeout(() => {
+                    this.#game.style.display = 'none'
+                    this.#playagain.style.display = 'block'
+                    this.#timer = true
+                }, 1200)
             }
-            console.log(this.#sameTileAmount)
-            console.log(this.#difficulty)
         }
 
         #startGame(imgs, size) {
@@ -205,6 +231,14 @@ customElements.define('memory-game',
             for (let i = 0; i < size; i++) {
                 this.#game.appendChild(tiles[i])
             }
+                // const timer = setInterval(() => {
+                //   console.log(this.#timer)
+                //   if (this.#timerStop === true) {
+                //       clearInterval(timer)
+                //   } else {
+                //     this.#timer += 1
+                //   }
+                // }, 1000)
         }
 
         //This shuffler is from the exercise.

@@ -42,6 +42,10 @@ template.innerHTML = `
             background-color: white
         }
 
+        :host([hidden]) {
+            visibility: hidden;
+        }
+
     </style>
 
     <div class="flippingtile" part="flippingtile">
@@ -89,7 +93,7 @@ customElements.define('flipping-tile',
         }
 
         attributeChangedCallback (name, oldValue, newValue) {
-            if (name === 'disablede' || name === 'hidden') {
+            if (name === 'disabled' || name === 'hidden') {
                 if (newValue || newValue === '') {
                     this.#flippingtile.setAttribute('disabled', '')
                 } else {

@@ -1,6 +1,8 @@
 import '../mac-dock/index.js'
 import '../app-icon/index.js'
 import '../draggable-window/index.js'
+import '../terminal-file/index.js'
+import '../terminal-app/index.js'
 
 const template = document.createElement('template')
 
@@ -102,6 +104,7 @@ template.innerHTML = `
         border-radius: 10px;
         border: solid 1px white;
     }
+
     </style>
     <div class="desktop">
         <div class="animation">
@@ -175,6 +178,15 @@ customElements.define('desktop-component',
             this.#zIndexClicks++
             event.target.style.zIndex = `${this.#zIndexClicks}`
           })
+
+          this.#test('pdf')
+          this.#test('pdf')
+          this.#test('txt')
+          this.#test('folder')
+          this.#test('pdf')
+          this.#test('pdf')
+          this.#test('txt')
+          this.#test('folder')
         }
 
         #appOnClick(application) {
@@ -196,5 +208,11 @@ customElements.define('desktop-component',
           window.style.left = `${this.#amountOfClicks + 10}px`
 
           this.#desktop.appendChild(window)
+        }
+
+        #test (file) {
+          const createFile = document.createElement('terminal-file')
+          createFile.setAttribute('src', file)
+          this.#desktop.appendChild(createFile)
         }
     })
