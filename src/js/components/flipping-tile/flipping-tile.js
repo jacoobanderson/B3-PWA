@@ -58,47 +58,70 @@ template.innerHTML = `
 
 customElements.define('flipping-tile',
 
-    class extends HTMLElement {
-
+  /**
+   * Represents the flipping tile.
+   */
+  class extends HTMLElement {
         #flippingtile
 
-        constructor() {
-            super()
-            this.attachShadow({ mode: 'open' })
-                .appendChild(template.content.cloneNode(true))
+        /**
+         * Creates an instance of this type.
+         */
+        constructor () {
+          super()
+          this.attachShadow({ mode: 'open' })
+            .appendChild(template.content.cloneNode(true))
 
-            this.#flippingtile = this.shadowRoot.querySelector('.flippingtile')
+          this.#flippingtile = this.shadowRoot.querySelector('.flippingtile')
         }
 
-        connectedCallback() {
-            this.addEventListener('click', () => this.#flipTile())
+        /**
+         * Called when the element is inserted to the DOM.
+         */
+        connectedCallback () {
+          this.addEventListener('click', () => this.#flipTile())
         }
 
+        /**
+         * Monitors the attributes.
+         *
+         * @returns {string[]} Represents the attributes observed.
+         */
         static get observedAttributes () {
-            return ['hidden', 'disabled']
+          return ['hidden', 'disabled']
         }
 
+        /**
+         * Flips the tile.
+         */
         #flipTile () {
-            if (!(this.hasAttribute('disabled') || this.hasAttribute('hidden'))) {
-                if (this.hasAttribute('front-shown')) {
-                    this.removeAttribute('front-shown')
-                } else {
-                    this.setAttribute('front-shown', '')
-                }
-            }
-
-            this.dispatchEvent(new CustomEvent('flipped', {
-                bubbles: true
-            }))
-        }
-
-        attributeChangedCallback (name, oldValue, newValue) {
-            if (name === 'disabled' || name === 'hidden') {
-                if (newValue || newValue === '') {
-                    this.#flippingtile.setAttribute('disabled', '')
-                } else {
-                    this.#flippingtile.removeAttribute('disabled')
-                }
+          if (!(this.hasAttribute('disabled') || this.hasAttribute('hidden'))) {
+            if (this.hasAttribute('front-shown')) {
+              this.removeAttribute('front-shown')
+            } else {
+              this.setAttribute('front-shown', '')
             }
           }
-    })
+
+          this.dispatchEvent(new CustomEvent('flipped', {
+            bubbles: true
+          }))
+        }
+
+        /**
+         * Called when an attribute is changed.
+         *
+         * @param {string} name - The name of the attribute.
+         * @param {*} oldValue - THe old value.
+         * @param {*} newValue - The new value.
+         */
+        attributeChangedCallback (name, oldValue, newValue) {
+          if (name === 'disabled' || name === 'hidden') {
+            if (newValue || newValue === '') {
+              this.#flippingtile.setAttribute('disabled', '')
+            } else {
+              this.#flippingtile.removeAttribute('disabled')
+            }
+          }
+        }
+  })

@@ -35,12 +35,16 @@ template.innerHTML = `
 
 customElements.define('mac-dock',
 
-class extends HTMLElement {
-
-    constructor() {
-        super()
-        this.attachShadow({ mode: 'open' })
-            .appendChild(template.content.cloneNode(true))
-
+  /**
+   * Represents the dock.
+   */
+  class extends HTMLElement {
+    /**
+     * Creates an instance of this type.
+     */
+    constructor () {
+      super()
+      this.attachShadow({ mode: 'open' })
+        .appendChild(template.content.cloneNode(true))
     }
-})
+  })

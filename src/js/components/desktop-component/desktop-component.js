@@ -130,8 +130,10 @@ template.innerHTML = `
 
 customElements.define('desktop-component',
 
-    class extends HTMLElement {
-
+  /**
+   * Represents the desktop.
+   */
+  class extends HTMLElement {
       #desktop
 
       #memory
@@ -144,70 +146,76 @@ customElements.define('desktop-component',
 
       #zIndexClicks
 
-        constructor() {
-            super()
-            this.attachShadow({ mode: 'open' })
-                .appendChild(template.content.cloneNode(true))
+      /**
+       * Creates an instance of the current type.
+       */
+      constructor () {
+        super()
+        this.attachShadow({ mode: 'open' })
+          .appendChild(template.content.cloneNode(true))
 
-            this.#memory = this.shadowRoot.querySelector('.memory')
-            this.#desktop = this.shadowRoot.querySelector('.desktop')
-            this.#terminal = this.shadowRoot.querySelector('.terminal')
-            this.#chat = this.shadowRoot.querySelector('.chat')
-            // change name
-            this.#amountOfClicks = 0
-            this.#zIndexClicks = 10
-        }
+        this.#memory = this.shadowRoot.querySelector('.memory')
+        this.#desktop = this.shadowRoot.querySelector('.desktop')
+        this.#terminal = this.shadowRoot.querySelector('.terminal')
+        this.#chat = this.shadowRoot.querySelector('.chat')
+        this.#amountOfClicks = 0
+        this.#zIndexClicks = 10
+      }
 
-        connectedCallback() {
-          this.#terminal.addEventListener('click', () => this.#appOnClick('terminal'))
-          this.#memory.addEventListener('click', () => this.#appOnClick('memory'))
-          this.#chat.addEventListener('click', () => this.#appOnClick('chat'))
-          this.#desktop.addEventListener('terminal-app:touch', (event) => this.#handleFileCreationEvent(event.detail, 'touch'))
-          this.#desktop.addEventListener('terminal-app:mkdir', (event) => this.#handleFileCreationEvent(event.detail, 'mkdir'))
+      /**
+       * Called when the element is inserted to the DOM.
+       */
+      connectedCallback () {
+        this.#terminal.addEventListener('click', () => this.#appOnClick('terminal'))
+        this.#memory.addEventListener('click', () => this.#appOnClick('memory'))
+        this.#chat.addEventListener('click', () => this.#appOnClick('chat'))
+        this.#desktop.addEventListener('terminal-app:touch', (event) => this.#handleFileCreationEvent(event.detail, 'touch'))
+        this.#desktop.addEventListener('terminal-app:mkdir', (event) => this.#handleFileCreationEvent(event.detail, 'mkdir'))
 
-          // Put in seperate method.
-          this.#desktop.addEventListener('draggable-window:closed', (event) => {
-            const target = event.target
-            const desktop = this.#desktop
-            desktop.removeChild(target)
-          // Should i use this effect?
-          // Starts the close animation.
-          // target.classList.add('closeanimation')
+        this.#desktop.addEventListener('draggable-window:closed', (event) => {
+          const target = event.target
+          const desktop = this.#desktop
+          desktop.removeChild(target)
+        })
 
-          // Allows the close animation to finish before removing the window from the DOM.
-          // setTimeout(function () {
-          //   desktop.removeChild(target)
-          //  }, 500)
-           })
+        this.#desktop.addEventListener('windowClickCount', (event) => {
+          this.#zIndexClicks++
+          event.target.style.zIndex = `${this.#zIndexClicks}`
+        })
+      }
 
-          // Put in seperate method.
-          this.#desktop.addEventListener('windowClickCount', (event) => {
-            this.#zIndexClicks++
-            event.target.style.zIndex = `${this.#zIndexClicks}`
-          })
-        }
+        /**
+         * Creates an instance of the app being clicked.
+         *
+         * @param {string} application - The application the user wants to start.
+         */
+        #appOnClick (application) {
+        // Each time the app is clicked the position changes, prevents windows from stacking.
+        // Checks how many windows currently.
+        const amountOfWindows = this.#desktop.querySelectorAll('draggable-window').length + 1
 
-        #appOnClick(application) {
-          // Each time the app is clicked the position changes, prevents windows from stacking.
-          // Checks how many windows currently.
-          const amountOfWindows = this.#desktop.querySelectorAll('draggable-window').length + 1
+        // Determines how much the position should change depending on how many windows are opened.
+        this.#amountOfClicks = amountOfWindows * 20
 
-          // Determines how much the position should change depending on how many windows are opened.
-          this.#amountOfClicks = amountOfWindows * 20
+        // Creates the window element.
+        const window = document.createElement('draggable-window')
 
-          // Creates the window element.
-          const window = document.createElement('draggable-window')
+        // Specifies which app should open.
+        window.setAttribute('app', `${application}`)
 
-          // Specifies which app should open.
-          window.setAttribute('app', `${application}`)
+        // The exact values of the apps position change.
+        window.style.top = `${this.#amountOfClicks + 10}px`
+        window.style.left = `${this.#amountOfClicks + 10}px`
 
-          // The exact values of the apps position change.
-          window.style.top = `${this.#amountOfClicks + 10}px`
-          window.style.left = `${this.#amountOfClicks + 10}px`
+        this.#desktop.appendChild(window)
+      }
 
-          this.#desktop.appendChild(window)
-        }
-
+        /**
+         * Appends the type of file and its name to the desktop (representation).
+         *
+         * @param {string} fileType - The type of file being created.
+         * @param {string} fileName - The name of the file being created.
+         */
         #appendFileToDesktop (fileType, fileName) {
           const container = document.createElement('div')
           const pElement = document.createElement('p')
@@ -220,6 +228,12 @@ customElements.define('desktop-component',
           this.#desktop.appendChild(container)
         }
 
+        /**
+         * Handles the file creation event.
+         *
+         * @param {object} detail - Stores the filetype and filename.
+         * @param {string} command - What kind of command was entered in the terminal.
+         */
         #handleFileCreationEvent (detail, command) {
           let fileName = detail.fileName
           let fileType = detail.fileType
@@ -232,4 +246,4 @@ customElements.define('desktop-component',
             this.#appendFileToDesktop(fileType, fileName)
           }
         }
-    })
+  })

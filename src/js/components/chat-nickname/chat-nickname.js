@@ -57,46 +57,72 @@ template.innerHTML = `
 
 customElements.define('chat-nickname',
 
-    class extends HTMLElement {
+  /**
+   * Represents the username.
+   */
+  class extends HTMLElement {
         #input
 
         #button
 
-        constructor() {
-            super()
-            this.attachShadow({ mode: 'open' })
-                .appendChild(template.content.cloneNode(true))
+        /**
+         * Creates an instance of the current type.
+         */
+        constructor () {
+          super()
+          this.attachShadow({ mode: 'open' })
+            .appendChild(template.content.cloneNode(true))
 
-            this.#input = this.shadowRoot.querySelector('.input')
-            this.#button = this.shadowRoot.querySelector('.button')
+          this.#input = this.shadowRoot.querySelector('.input')
+          this.#button = this.shadowRoot.querySelector('.button')
         }
 
+        /**
+         * Called when the element is inserted to the DOM.
+         */
         connectedCallback () {
-            this.#button.addEventListener('click', () => this.#setNicknameValue())
-            this.#button.addEventListener('click', () => this.#nicknameSubmitEvent())
-            this.#input.addEventListener('keypress', (event) => this.#onEnter(event))
+          this.#button.addEventListener('click', () => this.#setNicknameValue())
+          this.#button.addEventListener('click', () => this.#nicknameSubmitEvent())
+          this.#input.addEventListener('keypress', (event) => this.#onEnter(event))
         }
 
-        #onEnter(event) {
-            if (event.key === 'Enter') {
-                this.#setNicknameValue()
-                this.#nicknameSubmitEvent()
-            }
+        /**
+         * Represents what happens when enter is pressed.
+         *
+         * @param {string} event - Represents the event.
+         */
+        #onEnter (event) {
+          if (event.key === 'Enter') {
+            this.#setNicknameValue()
+            this.#nicknameSubmitEvent()
+          }
         }
 
+        /**
+         * Dispatches a new customEvent which happens when the username is submitted.
+         *
+         */
         #nicknameSubmitEvent () {
-            this.dispatchEvent(new CustomEvent('nicknameSubmit', {
-                bubbles: true
-            }))
-        }
-        
-        #getNicknameValue () {
-            return this.#input.value
+          this.dispatchEvent(new CustomEvent('nicknameSubmit', {
+            bubbles: true
+          }))
         }
 
-        #setNicknameValue () {
-            const value = this.#getNicknameValue()
-            window.localStorage.setItem('nickname', value)
-            this.#input.value = ''
+        /**
+         * Returns the chosen nickname.
+         *
+         * @returns {string} String that represents the chosen nickname.
+         */
+        #getNicknameValue () {
+          return this.#input.value
         }
-    })
+
+        /**
+         * Puts the nickname in local storage.
+         */
+        #setNicknameValue () {
+          const value = this.#getNicknameValue()
+          window.localStorage.setItem('nickname', value)
+          this.#input.value = ''
+        }
+  })

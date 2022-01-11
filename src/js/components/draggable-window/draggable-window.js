@@ -68,101 +68,140 @@ template.innerHTML = `
 
 customElements.define('draggable-window',
 
-    class extends HTMLElement {
-
+  /**
+   * Represents the draggable window.
+   */
+  class extends HTMLElement {
         #exit
 
         #appcontainer
 
         #headmenu
 
-        constructor() {
-            super()
-            this.attachShadow({ mode: 'open' })
-                .appendChild(template.content.cloneNode(true))
+        /**
+         * Creates an instance of this type.
+         */
+        constructor () {
+          super()
+          this.attachShadow({ mode: 'open' })
+            .appendChild(template.content.cloneNode(true))
 
-            this.#exit = this.shadowRoot.querySelector('.exit')
-            this.#appcontainer = this.shadowRoot.querySelector('.appcontainer')
-            this.#headmenu = this.shadowRoot.querySelector('.menu')
+          this.#exit = this.shadowRoot.querySelector('.exit')
+          this.#appcontainer = this.shadowRoot.querySelector('.appcontainer')
+          this.#headmenu = this.shadowRoot.querySelector('.menu')
         }
 
-        connectedCallback() {
-            this.#exit.addEventListener('click', (event) => this.#exitApp(event))
-            this.#headmenu.addEventListener('mousedown', (event) => this.#onMouseDown(event))
-            this.addEventListener('click', (event) => this.#focusElement(event))
-            this.addEventListener('click', (event) => this.#thisOnClick(event))
-            this.addEventListener('mousedown', (event) => this.#thisOnClick(event))
+        /**
+         * Called when the element is inserted into the DOM.
+         */
+        connectedCallback () {
+          this.#exit.addEventListener('click', (event) => this.#exitApp(event))
+          this.#headmenu.addEventListener('mousedown', (event) => this.#onMouseDown(event))
+          this.addEventListener('click', (event) => this.#focusElement(event))
+          this.addEventListener('click', (event) => this.#thisOnClick(event))
+          this.addEventListener('mousedown', (event) => this.#thisOnClick(event))
         }
 
+        /**
+         * Fires an event that in turn exits the app.
+         */
         #exitApp () {
-            // removes the app from the DOM
-            this.dispatchEvent(new CustomEvent('draggable-window:closed', {
-                bubbles: true
-            }))
-
-            // this.remove()
-            // this.style.display = 'none'
+          // removes the app from the DOM
+          this.dispatchEvent(new CustomEvent('draggable-window:closed', {
+            bubbles: true
+          }))
+          // this.remove()
         }
 
+        /**
+         * Fires an event that counts the times a window has been clicked.
+         */
+        #thisOnClick () {
         // Fires when this component is clicked or mousedown, allows the desktop component to register
         // when this happens and allows the change of zIndex based on that information (Each element keeps it's zIndex).
-        #thisOnClick () {
-            this.dispatchEvent(new CustomEvent('windowClickCount', {
-                bubbles: true
-            }))
+          this.dispatchEvent(new CustomEvent('windowClickCount', {
+            bubbles: true
+          }))
         }
 
-        static get observedAttributes() {
-            return ['app']
+        /**
+         * Observes this element's attributes.
+         *
+         * @returns {string[]} - Represents the attributes being observed.
+         */
+        static get observedAttributes () {
+          return ['app']
         }
 
+        /**
+         * Called when the attributes on this element changes.
+         *
+         * @param {string} name - The name of the attribute
+         * @param {*} oldValue - The old value.
+         * @param {*} newValue - The new value.
+         */
         attributeChangedCallback (name, oldValue, newValue) {
-            // Creates the window and the app depending on which value of the attribute.
-            if (name === 'app' && newValue === 'terminal') {
-                const terminal = document.createElement('terminal-app')
-                this.#appcontainer.appendChild(terminal)
-            } else if (name === 'app' && newValue === 'memory') {
-                const memoryGame = document.createElement('memory-game')
-                this.#appcontainer.appendChild(memoryGame)
-            } else if (name === 'app' && newValue === 'chat') {
-                const chatApp = document.createElement('chat-app')
-                this.#appcontainer.appendChild(chatApp)
-            }
+          // Creates the window and the app depending on which value of the attribute.
+          if (name === 'app' && newValue === 'terminal') {
+            const terminal = document.createElement('terminal-app')
+            this.#appcontainer.appendChild(terminal)
+          } else if (name === 'app' && newValue === 'memory') {
+            const memoryGame = document.createElement('memory-game')
+            this.#appcontainer.appendChild(memoryGame)
+          } else if (name === 'app' && newValue === 'chat') {
+            const chatApp = document.createElement('chat-app')
+            this.#appcontainer.appendChild(chatApp)
+          }
         }
 
-        #onMouseDown(event) {
-            const element = this
+        /**
+         * Makes the window draggable.
+         *
+         * @param {string} event - The event.
+         */
+        #onMouseDown (event) {
+          const element = this
 
-            this.#focusElement()
+          this.#focusElement()
 
-            // Temporary solution, better alternative?
-            window.addEventListener('mousemove', onMouseMove)
-            window.addEventListener('mouseup', onMouseUp)
+          // Temporary solution, better alternative?
+          window.addEventListener('mousemove', onMouseMove)
+          window.addEventListener('mouseup', onMouseUp)
 
-            let previousX = event.clientX
-            let previousY = event.clientY
+          let previousX = event.clientX
+          let previousY = event.clientY
 
-            function onMouseMove (event) {
-                const newPosX = previousX - event.clientX
-                const newPosY = previousY - event.clientY
+          /**
+           * Handles the mouse movement.
+           *
+           * @param {string} event - The event
+           */
+          function onMouseMove (event) {
+            const newPosX = previousX - event.clientX
+            const newPosY = previousY - event.clientY
 
-                const domRect = element.getBoundingClientRect()
-                element.style.left = domRect.left - newPosX + 'px'
-                element.style.top = domRect.top - newPosY + 'px'
+            const domRect = element.getBoundingClientRect()
+            element.style.left = domRect.left - newPosX + 'px'
+            element.style.top = domRect.top - newPosY + 'px'
 
-                previousX = event.clientX
-                previousY = event.clientY
-            }
+            previousX = event.clientX
+            previousY = event.clientY
+          }
 
-            function onMouseUp () {
-                window.removeEventListener('mousemove', onMouseMove)
-                window.removeEventListener('mouseup', onMouseUp)
-            }
+          /**
+           * Removes the event listeners when the mouse is up.
+           */
+          function onMouseUp () {
+            window.removeEventListener('mousemove', onMouseMove)
+            window.removeEventListener('mouseup', onMouseUp)
+          }
         }
 
-        // Sets the attribute tabindex to 0 which allows the element to be focused.
-        #focusElement() {
-            this.setAttribute('tabindex', '0')
-            //this.focus()
+        /**
+         * Sets the attribute tabindex to 0 which allows the element to be focused.
+         */
+        #focusElement () {
+          this.setAttribute('tabindex', '0')
+          // this.focus()
         }
-    })
+  })

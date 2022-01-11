@@ -107,8 +107,10 @@ template.innerHTML = `
 
 customElements.define('chat-app',
 
-    class extends HTMLElement {
-
+  /**
+   * Represents the chat app.
+   */
+  class extends HTMLElement {
         #chatapp
 
         #hideNickname
@@ -123,117 +125,149 @@ customElements.define('chat-app',
 
         #webSocketUrl
 
-        constructor() {
-            super()
-            this.attachShadow({ mode: 'open' })
-                .appendChild(template.content.cloneNode(true))
+        /**
+         * Creates an instance of the current type.
+         */
+        constructor () {
+          super()
+          this.attachShadow({ mode: 'open' })
+            .appendChild(template.content.cloneNode(true))
 
-            this.#chatapp = this.shadowRoot.querySelector('.chatapp')
-            this.#chatmessages = this.shadowRoot.querySelector('.chatmessages')
-            this.#sender = this.shadowRoot.querySelector('.sender')
-            this.#submitmessage = this.shadowRoot.querySelector('.submitmessage')
-            this.#hideNickname = this.shadowRoot.querySelector('.hidenickname')
-            this.#nickname = undefined
-            this.#webSocketUrl = new WebSocket('wss://courselab.lnu.se/message-app/socket')
-
-            // socket key eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd
+          this.#chatapp = this.shadowRoot.querySelector('.chatapp')
+          this.#chatmessages = this.shadowRoot.querySelector('.chatmessages')
+          this.#sender = this.shadowRoot.querySelector('.sender')
+          this.#submitmessage = this.shadowRoot.querySelector('.submitmessage')
+          this.#hideNickname = this.shadowRoot.querySelector('.hidenickname')
+          this.#nickname = undefined
+          this.#webSocketUrl = new WebSocket('wss://courselab.lnu.se/message-app/socket')
         }
 
+        /**
+         * Called when the element is inserted into the DOM.
+         */
         connectedCallback () {
-            this.#checkIfNickname()
-            this.#sender.focus()
-            this.#hideNickname.addEventListener('nicknameSubmit', () => this.#showChat())
-            this.#hideNickname.addEventListener('nicknameSubmit', () => this.#getNickname())
-            this.#webSocketUrl.addEventListener('message', (event) => this.#showMessages(event))
-            this.#submitmessage.addEventListener('click', () => this.#sendMessage())
-            this.#sender.addEventListener('keypress', (event) => this.#sendMessageOnEnter(event))
+          this.#checkIfNickname()
+          this.#sender.focus()
+          this.#hideNickname.addEventListener('nicknameSubmit', () => this.#showChat())
+          this.#hideNickname.addEventListener('nicknameSubmit', () => this.#getNickname())
+          this.#webSocketUrl.addEventListener('message', (event) => this.#showMessages(event))
+          this.#submitmessage.addEventListener('click', () => this.#sendMessage())
+          this.#sender.addEventListener('keypress', (event) => this.#sendMessageOnEnter(event))
         }
 
-        #sendMessageOnEnter(event) {
-            if (event.key === 'Enter') {
-                this.#sendMessage()
-            }
+        /**
+         * Sends the message when enter is pressed.
+         *
+         * @param {string} event - Representing the event.
+         */
+        #sendMessageOnEnter (event) {
+          if (event.key === 'Enter') {
+            this.#sendMessage()
+          }
         }
 
-        // Remove and append nickname instead?
-        #showChat() {
+        /**
+         * Shows the chat and hides the nickname.
+         */
+        #showChat () {
+          this.#hideNickname.style.display = 'none'
+          this.#chatapp.style.display = 'flex'
+        }
+
+        /**
+         * Gets the nickname from local storage.
+         *
+         * @returns {string} The username.
+         */
+        #getNickname () {
+          this.#nickname = window.localStorage.getItem('nickname')
+          return this.#nickname
+        }
+
+        /**
+         * Checks if there is a username, if so, doesnt show the nickname input.
+         */
+        #checkIfNickname () {
+          // Checks if there is a nickname, if so - show the chat.
+          if (this.#getNickname() !== null && this.#getNickname().length > 0) {
             this.#hideNickname.style.display = 'none'
             this.#chatapp.style.display = 'flex'
-        }
-
-        #getNickname () {
-            this.#nickname = window.localStorage.getItem('nickname')
-            return this.#nickname
-        }
-
-        #checkIfNickname () {
-            // Checks if there is a nickname, if so - show the chat.
-            if (this.#getNickname() !== null && this.#getNickname().length > 0) {
-                this.#hideNickname.style.display = 'none'
-                this.#chatapp.style.display = 'flex'
             // Else show the nickname input.
-            } else {
-                this.#hideNickname.style.display = 'flex'
-                this.#chatapp.style.display = 'none'
-            }
+          } else {
+            this.#hideNickname.style.display = 'flex'
+            this.#chatapp.style.display = 'none'
+          }
         }
 
+        /**
+         * Shows the messages in the chat application.
+         *
+         * @param {string} event - represents the event.
+         */
         #showMessages (event) {
-            const data = JSON.parse(event.data)
-            if (data.type !== 'heartbeat') {
-                const messageElement = document.createElement('p')
-                const message = data.data
-                const smileyMessage = this.#addSmiley(message)
-                messageElement.textContent = `${data.username}: ${smileyMessage}`
-                this.#chatmessages.appendChild(messageElement)
-            }
-            // automatic scroll to most recent message.
-            this.#chatmessages.scrollTop = this.#chatmessages.scrollHeight
+          const data = JSON.parse(event.data)
+          if (data.type !== 'heartbeat') {
+            const messageElement = document.createElement('p')
+            const message = data.data
+            const smileyMessage = this.#addSmiley(message)
+            messageElement.textContent = `${data.username}: ${smileyMessage}`
+            this.#chatmessages.appendChild(messageElement)
+          }
+          // automatic scroll to most recent message.
+          this.#chatmessages.scrollTop = this.#chatmessages.scrollHeight
 
-            // Clean
-            if (this.shadowRoot.querySelectorAll('p').length > 20) {
-                this.#chatmessages.removeChild(this.shadowRoot.querySelectorAll('p')[0])
-            }
-
+          if (this.shadowRoot.querySelectorAll('p').length > 20) {
+            this.#chatmessages.removeChild(this.shadowRoot.querySelectorAll('p')[0])
+          }
         }
 
+        /**
+         * Sends the message to the websocket.
+         *
+         */
         #sendMessage () {
-            const message = this.#sender.value
-            const nickname = this.#nickname
+          const message = this.#sender.value
+          const nickname = this.#nickname
 
-            if (this.#webSocketUrl.readyState === 1) {
-                this.#webSocketUrl.send(JSON.stringify({
-                    type: 'message',
-                    data: `${message}`,
-                    username: `${nickname}`,
-                    key: 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
-                }))
-            }
-            this.#sender.value = ''
+          if (this.#webSocketUrl.readyState === 1) {
+            this.#webSocketUrl.send(JSON.stringify({
+              type: 'message',
+              data: `${message}`,
+              username: `${nickname}`,
+              key: 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
+            }))
+          }
+          this.#sender.value = ''
         }
 
-        #addSmiley(string) {
-            // Make better
-            let smileyString = string
+        /**
+         * Implements emoji functionality.
+         *
+         * @param {string} string - The message string.
+         * @returns {string} Modified string that shows emojis
+         */
+        #addSmiley (string) {
+          // Make better
+          let smileyString = string
 
-            if (string.match(/:\)/g)) {
-                smileyString = smileyString.replace(/:\)/g, String.fromCodePoint(128578))
-            }
-            if (string.match(/:D/g)) {
-                smileyString = smileyString.replace(/:D/g, String.fromCodePoint(128512))
-            }
-            if (string.match(/;D/g)) {
-                smileyString = smileyString.replace(/;D/g, String.fromCodePoint(128514))
-            }
-            if (string.match(/:O/g)) {
-                smileyString = smileyString.replace(/:O/g, String.fromCodePoint(128559))
-            }
-            if (string.match(/:\(/g)) {
-                smileyString = smileyString.replace(/:\(/g, String.fromCodePoint(128577))
-            }
-            if (string.match(/:P/g)) {
-                smileyString = smileyString.replace(/:P/g, String.fromCodePoint(128540))
-            }
-            return smileyString
+          if (string.match(/:\)/g)) {
+            smileyString = smileyString.replace(/:\)/g, String.fromCodePoint(128578))
+          }
+          if (string.match(/:D/g)) {
+            smileyString = smileyString.replace(/:D/g, String.fromCodePoint(128512))
+          }
+          if (string.match(/;D/g)) {
+            smileyString = smileyString.replace(/;D/g, String.fromCodePoint(128514))
+          }
+          if (string.match(/:O/g)) {
+            smileyString = smileyString.replace(/:O/g, String.fromCodePoint(128559))
+          }
+          if (string.match(/:\(/g)) {
+            smileyString = smileyString.replace(/:\(/g, String.fromCodePoint(128577))
+          }
+          if (string.match(/:P/g)) {
+            smileyString = smileyString.replace(/:P/g, String.fromCodePoint(128540))
+          }
+          return smileyString
         }
-    })
+  })
