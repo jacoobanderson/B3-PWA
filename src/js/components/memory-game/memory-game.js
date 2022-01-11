@@ -185,61 +185,66 @@ customElements.define('memory-game',
          * @param {string} event - The event.
          */
         #tileIsFlipped (event) {
-          // const flippingTiles = Array.from(this.#game.querySelectorAll('flipping-tile'))
-          // fix, should not be able to press more than two tiles.
-
-          if (this.#twoTiles.length < 2) {
-            this.#twoTiles.push(event.target)
-          } else {
-            this.#twoTiles = [event.target]
-          }
-
-          if (this.#twoTiles.length === 2) {
-            this.#attempts++
-
-            if (this.#twoTiles[0].isEqualNode(this.#twoTiles[1])) {
-              this.#twoTiles[0].setAttribute('disabled', '')
-              this.#twoTiles[1].setAttribute('disabled', '')
-              this.#sameTileAmount++
-              setTimeout(() => {
-                this.#twoTiles[0].setAttribute('hidden', '')
-                this.#twoTiles[1].setAttribute('hidden', '')
-              }, 1200)
+          if (!event.target.hasAttribute('disabled')) {
+            if (this.#twoTiles.length < 2) {
+              this.#twoTiles.push(event.target)
             } else {
-              setTimeout(() => {
-                this.#twoTiles[0].removeAttribute('front-shown')
-                this.#twoTiles[1].removeAttribute('front-shown')
-              }, 1000)
+              this.#twoTiles = [event.target]
             }
-          }
 
-          if (this.#sameTileAmount === 2 && this.#difficulty === '4') {
-            this.#score.textContent = `Your score: ${this.#attempts}`
-            this.#attempts = 0
-            this.#stopTime()
+            if (this.#twoTiles.length === 2) {
+              this.#attempts++
+
+              if (this.#twoTiles[0].isEqualNode(this.#twoTiles[1])) {
+                this.#twoTiles[0].setAttribute('disabled', '')
+                this.#twoTiles[1].setAttribute('disabled', '')
+                this.#sameTileAmount++
+                setTimeout(() => {
+                  this.#twoTiles[0].setAttribute('hidden', '')
+                  this.#twoTiles[1].setAttribute('hidden', '')
+                }, 1200)
+              } else {
+                setTimeout(() => {
+                  this.#twoTiles[0].removeAttribute('front-shown')
+                  this.#twoTiles[1].removeAttribute('front-shown')
+                }, 1000)
+              }
+            }
+
+            if (this.#sameTileAmount === 2 && this.#difficulty === '4') {
+              this.#score.textContent = `Your score: ${this.#attempts}`
+              this.#attempts = 0
+              this.#stopTime()
+              setTimeout(() => {
+                this.#game.style.display = 'none'
+                this.#timerClock.style.display = 'none'
+                this.#playagain.style.display = 'block'
+              }, 1200)
+            } else if (this.#sameTileAmount === 4 && this.#difficulty === '8') {
+              this.#score.textContent = `Your score: ${this.#attempts}`
+              this.#attempts = 0
+              this.#stopTime()
+              setTimeout(() => {
+                this.#game.style.display = 'none'
+                this.#timerClock.style.display = 'none'
+                this.#playagain.style.display = 'block'
+              }, 1200)
+            } else if (this.#sameTileAmount === 8 && this.#difficulty === '16') {
+              this.#score.textContent = `Your score: ${this.#attempts}`
+              this.#attempts = 0
+              this.#stopTime()
+              setTimeout(() => {
+                this.#game.style.display = 'none'
+                this.#timerClock.style.display = 'none'
+                this.#playagain.style.display = 'block'
+              }, 1200)
+            }
+            if (this.#twoTiles.length === 2) {
+              this.#flippingTilesInactive()
+            }
             setTimeout(() => {
-              this.#game.style.display = 'none'
-              this.#timerClock.style.display = 'none'
-              this.#playagain.style.display = 'block'
-            }, 1200)
-          } else if (this.#sameTileAmount === 4 && this.#difficulty === '8') {
-            this.#score.textContent = `Your score: ${this.#attempts}`
-            this.#attempts = 0
-            this.#stopTime()
-            setTimeout(() => {
-              this.#game.style.display = 'none'
-              this.#timerClock.style.display = 'none'
-              this.#playagain.style.display = 'block'
-            }, 1200)
-          } else if (this.#sameTileAmount === 8 && this.#difficulty === '16') {
-            this.#score.textContent = `Your score: ${this.#attempts}`
-            this.#attempts = 0
-            this.#stopTime()
-            setTimeout(() => {
-              this.#game.style.display = 'none'
-              this.#timerClock.style.display = 'none'
-              this.#playagain.style.display = 'block'
-            }, 1200)
+              this.#flippingTilesActive()
+            }, 1800)
           }
         }
 
@@ -311,7 +316,6 @@ customElements.define('memory-game',
           this.#timerClock.style.display = 'block'
           this.#timer = setInterval(() => {
             this.#time++
-            console.log(this.#time)
             this.#timerClock.textContent = this.#time
           }, 1000)
         }
@@ -324,5 +328,31 @@ customElements.define('memory-game',
           clearInterval(this.#timer)
           this.#time = 0
           this.#timeScore.textContent = `Your time was: ${this.#finalTime}`
+        }
+
+        /**
+         * Makes all flipping tiles inactive.
+         */
+        #flippingTilesInactive () {
+          const flippingtiles = Array.from(this.#game.querySelectorAll('flipping-tile'))
+          for (const flippingtile of flippingtiles) {
+            if (!flippingtile.hasAttribute('hidden')) {
+              flippingtile.setAttribute('disabled', '')
+            }
+          }
+        }
+
+        /**
+         * Makes all flipping tiles active.
+         */
+        #flippingTilesActive () {
+          const flippingtiles = Array.from(this.#game.querySelectorAll('flipping-tile'))
+          for (const flippingtile of flippingtiles) {
+            if (!flippingtile.hasAttribute('hidden')) {
+              if (flippingtile.hasAttribute('disabled')) {
+                flippingtile.removeAttribute('disabled')
+              }
+            }
+          }
         }
   })

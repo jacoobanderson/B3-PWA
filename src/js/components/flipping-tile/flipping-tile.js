@@ -80,6 +80,9 @@ customElements.define('flipping-tile',
          */
         connectedCallback () {
           this.addEventListener('click', () => this.#flipTile())
+          this.addEventListener('keypress', (event) => this.#onEnter(event))
+          this.focus()
+          this.setAttribute('tabindex', '0')
         }
 
         /**
@@ -119,9 +122,21 @@ customElements.define('flipping-tile',
           if (name === 'disabled' || name === 'hidden') {
             if (newValue || newValue === '') {
               this.#flippingtile.setAttribute('disabled', '')
+              this.setAttribute('tabindex', '-1')
             } else {
               this.#flippingtile.removeAttribute('disabled')
             }
+          }
+        }
+
+        /**
+         * Flips the tile on enter.
+         *
+         * @param {string} event - Represents the event.
+         */
+        #onEnter (event) {
+          if (event.key === 'Enter') {
+            this.#flipTile()
           }
         }
   })

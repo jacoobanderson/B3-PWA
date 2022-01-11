@@ -164,7 +164,6 @@ customElements.define('draggable-window',
 
           this.#focusElement()
 
-          // Temporary solution, better alternative?
           window.addEventListener('mousemove', onMouseMove)
           window.addEventListener('mouseup', onMouseUp)
 
@@ -183,6 +182,23 @@ customElements.define('draggable-window',
             const domRect = element.getBoundingClientRect()
             element.style.left = domRect.left - newPosX + 'px'
             element.style.top = domRect.top - newPosY + 'px'
+
+            // Stops the window to the left.
+            if (parseInt(element.style.left.slice(0, 4)) <= -600) {
+              element.style.left = domRect.left + newPosX + 'px'
+            }
+            // Stops the window at the top.
+            if (parseInt(element.style.top.slice(0, 4)) <= -15) {
+              element.style.top = domRect.top + newPosY + 'px'
+            }
+            // Stops the window at the bottom.
+            if (parseInt(element.style.top.slice(0, 4)) >= 800) {
+              element.style.top = domRect.top - newPosX + 'px'
+            }
+            // Stops the window to the right.
+            if (parseInt(element.style.left.slice(0, 4)) >= 1200) {
+              element.style.left = domRect.left + newPosX + 'px'
+            }
 
             previousX = event.clientX
             previousY = event.clientY
