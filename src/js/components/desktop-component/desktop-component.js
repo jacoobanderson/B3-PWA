@@ -217,13 +217,18 @@ customElements.define('desktop-component',
          * @param {string} fileName - The name of the file being created.
          */
         #appendFileToDesktop (fileType, fileName) {
+          // Creates the container and the p element and then sets the filename.
           const container = document.createElement('div')
           const pElement = document.createElement('p')
           pElement.textContent = fileName
+
+          // Creates the terminal file, sets the img and then appends to container.
           const createFile = document.createElement('terminal-file')
           createFile.setAttribute('src', fileType)
           container.appendChild(createFile)
           container.appendChild(pElement)
+
+          // Add styling.
           container.classList.add('desktopApps')
           this.#desktop.appendChild(container)
         }

@@ -247,7 +247,6 @@ customElements.define('chat-app',
          * @returns {string} Modified string that shows emojis
          */
         #addSmiley (string) {
-          // Make better
           let smileyString = string
 
           if (string.match(/:\)/g)) {

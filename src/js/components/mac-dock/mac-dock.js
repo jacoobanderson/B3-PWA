@@ -27,9 +27,6 @@ template.innerHTML = `
         <slot name="memory" class="test one"></slot>
         <slot name="chat" class="test two"></slot>
         <slot name="terminal" class="test three"></slot>
-        <slot name="testone" class="test four"></slot>
-        <slot name="testtwo" class="test five"></slot>
-        <slot name="testthree" class="test six"></slot>
     </div>
 `
 

@@ -46,10 +46,6 @@ template.innerHTML = `
             height: 75px;
         }
 
-        flipping-tile::part(front) {
-            background: black;
-        }
-
         .timerClock {
             justify-self: center;
             align-self: center;

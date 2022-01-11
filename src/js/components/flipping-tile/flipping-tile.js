@@ -48,11 +48,11 @@ template.innerHTML = `
 
     </style>
 
-    <div class="flippingtile" part="flippingtile">
-        <div class="front" part="front">
+    <div class="flippingtile">
+        <div class="front">
             <slot></slot>
         </div>
-        <div class="back" part="back"></div>
+        <div class="back"></div>
     </div>
 `
 
